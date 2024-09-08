@@ -1,12 +1,12 @@
 package com.fitlog.domain.repository
 
-import com.example.fitlog.data.models.TrainingProgramDB
+import com.fitlog.domain.models.TrainingProgram
 
 interface TrainingProgramRepository {
 
-    fun getCurrentProgram() : com.example.fitlog.data.models.TrainingProgramDB
+    fun getCurrentProgram() : TrainingProgram
 
-    fun setCurrentProgram(newCurrentProgram: com.example.fitlog.data.models.TrainingProgramDB)
+    fun setCurrentProgram(newCurrentProgram: TrainingProgram)
 
-    fun getAllPrograms() : List<com.example.fitlog.data.models.TrainingProgramDB>
+    fun getAllPrograms() : List<TrainingProgram>
 }

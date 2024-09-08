@@ -1,10 +1,11 @@
 package com.fitlog.domain.usecase
 
-import com.example.fitlog.data.models.TrainingProgramDB
+
+import com.fitlog.domain.models.TrainingProgram
 import com.fitlog.domain.repository.TrainingProgramRepository
 
 class GetCurrentProgramUseCase (private val repository: TrainingProgramRepository){
-    fun execute(): com.example.fitlog.data.models.TrainingProgramDB {
+    fun execute(): TrainingProgram {
         return repository.getCurrentProgram()
     }
 }

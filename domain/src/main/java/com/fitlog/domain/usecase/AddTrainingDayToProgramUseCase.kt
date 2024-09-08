@@ -1,6 +1,6 @@
 package com.fitlog.domain.usecase
 
-import com.example.fitlog.data.models.TrainingDayDB
+import com.fitlog.domain.models.TrainingDay
 import com.fitlog.domain.repository.TrainingDayRepository
 import com.fitlog.domain.repository.TrainingProgramRepository
 
@@ -9,7 +9,7 @@ class AddTrainingDayToProgramUseCase(
     private val programRepository: TrainingProgramRepository
 ) {
 
-    fun execute(newTrainingDay: com.example.fitlog.data.models.TrainingDayDB){
+    fun execute(newTrainingDay: TrainingDay){
         val currentProgram = programRepository.getCurrentProgram()
         dayRepository.addTrainingDay(newTrainingDay,currentProgram)
     }

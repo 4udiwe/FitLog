@@ -1,13 +1,14 @@
 package com.fitlog.domain.repository
 
-import com.example.fitlog.data.models.TrainingDayDB
-import com.example.fitlog.data.models.TrainingProgramDB
+import com.fitlog.domain.models.TrainingDay
+import com.fitlog.domain.models.TrainingProgram
+
 
 interface TrainingDayRepository {
 
-    fun addTrainingDay(newDay: com.example.fitlog.data.models.TrainingDayDB, program: com.example.fitlog.data.models.TrainingProgramDB)
+    fun addTrainingDay(newDay: TrainingDay, program: TrainingProgram)
 
-    fun deleteTrainingDay(dayToDelete: com.example.fitlog.data.models.TrainingDayDB)
+    fun deleteTrainingDay(dayToDelete: TrainingDay)
 
-    fun getTrainingDaysByProgram(program: com.example.fitlog.data.models.TrainingProgramDB) : List<com.example.fitlog.data.models.TrainingDayDB>
+    fun getTrainingDaysByProgram(program: TrainingProgram) : List<TrainingDay>
 }
