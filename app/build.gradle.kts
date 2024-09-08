@@ -51,15 +51,18 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.4")
-
-    implementation(libs.androidx.navigation.compose)
-
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
+    //id
+    implementation(libs.koin.android)
+    //modules
     implementation(project(":data"))
     implementation(project(":domain"))
+    //viewmodel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.4")
+    //navigation
+    implementation(libs.androidx.navigation.compose)
+    //room db
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
 
     implementation(libs.androidx.core.ktx)

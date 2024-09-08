@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.fitlog.app.ProgramViewModel
+import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
 import com.fitlog.app.navigation.BottomNavigation
 import com.fitlog.app.navigation.NavGraph

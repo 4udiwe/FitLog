@@ -18,6 +18,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 jetbrainsKotlinJvm = "1.9.0"
 roomCommon = "2.6.1"
+koinAndroid = "4.0.0-RC2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +44,7 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koinAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

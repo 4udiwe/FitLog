@@ -6,7 +6,7 @@ import com.fitlog.data.models.TrainingProgramDB
 import com.fitlog.domain.models.TrainingProgram
 import com.fitlog.domain.repository.TrainingProgramRepository
 
-class TrainingProgramRepositorImpl(
+class TrainingProgramRepositoryImpl(
     private val programDao: ProgramDao
 ) : TrainingProgramRepository {
 

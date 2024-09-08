@@ -1,23 +1,34 @@
-package com.fitlog.app
+package com.fitlog.app.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.fitlog.data.models.ExerciseDB
-import com.example.fitlog.data.db.ProgramDB
-import com.example.fitlog.data.models.TrainingDayDB
-import com.example.fitlog.data.models.TrainingProgramDB
-import com.example.fitlog.data.db.TrainingProgramDataBase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+
+import com.fitlog.data.db.TrainingProgramDataBase
+import com.fitlog.data.repository.TrainingProgramRepositoryImpl
+import com.fitlog.domain.usecase.AddExerciseToDayUseCase
+import com.fitlog.domain.usecase.AddTrainingDayToProgramUseCase
+import com.fitlog.domain.usecase.DeleteExerciseUseCase
+import com.fitlog.domain.usecase.DeleteTrainingDayUseCase
+import com.fitlog.domain.usecase.GetCurrentProgramUseCase
+import com.fitlog.domain.usecase.GetExercisesOfDayUseCase
+import com.fitlog.domain.usecase.GetTrainingDaysOfProgramUseCase
 
 
-class ProgramViewModel(private val db : com.example.fitlog.data.db.TrainingProgramDataBase) : ViewModel() {
+class ProgramViewModel(
+    private val getCurrentProgramUseCase: GetCurrentProgramUseCase,
+    private val getTrainingDaysOfProgramUseCase: GetTrainingDaysOfProgramUseCase,
+    private val addTrainingDayToProgramUseCase: AddTrainingDayToProgramUseCase,
+    private val deleteTrainingDayUseCase: DeleteTrainingDayUseCase,
+    private val getExercisesOfDayUseCase: GetExercisesOfDayUseCase,
+    private val addExerciseToDayUseCase: AddExerciseToDayUseCase,
+    private val deleteExerciseUseCase: DeleteExerciseUseCase
+) : ViewModel() {
+
+
+    /*
+
 
     var currentProgram: com.example.fitlog.data.db.ProgramDB?
+
     var selectedDay: com.example.fitlog.data.models.TrainingDayDB? = null
 
     init {
@@ -100,6 +111,8 @@ class ProgramViewModel(private val db : com.example.fitlog.data.db.TrainingProgr
         }
     }
 
+
+
     companion object{
         val factory: ViewModelProvider.Factory = object :ViewModelProvider.Factory{
             @Suppress("UNCHECKED_CAST")
@@ -112,4 +125,6 @@ class ProgramViewModel(private val db : com.example.fitlog.data.db.TrainingProgr
             }
         }
     }
+
+     */
 }

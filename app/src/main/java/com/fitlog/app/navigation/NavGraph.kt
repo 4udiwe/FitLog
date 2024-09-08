@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.fitlog.app.ProgramViewModel
+import com.fitlog.app.viewmodel.ProgramViewModel
 import com.fitlog.app.screens.ProgramScreen
 import com.fitlog.app.screens.SettingsScreen
 import com.fitlog.app.screens.TrainingScreen
