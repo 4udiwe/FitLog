@@ -6,7 +6,7 @@ import com.fitlog.domain.repository.TrainingDayRepository
 
 class DeleteTrainingDayUseCase(private val trainingDayRepository: TrainingDayRepository) {
 
-    fun execute(dayToDelete: TrainingDay){
+    suspend fun execute(dayToDelete: TrainingDay){
         trainingDayRepository.deleteTrainingDay(dayToDelete)
     }
 }

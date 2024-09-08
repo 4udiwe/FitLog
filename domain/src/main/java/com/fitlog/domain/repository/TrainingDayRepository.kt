@@ -5,10 +5,7 @@ import com.fitlog.domain.models.TrainingProgram
 
 
 interface TrainingDayRepository {
-
-    fun addTrainingDay(newDay: TrainingDay, program: TrainingProgram)
-
-    fun deleteTrainingDay(dayToDelete: TrainingDay)
-
-    fun getTrainingDaysByProgram(program: TrainingProgram) : List<TrainingDay>
+    suspend fun addTrainingDay(newDay: TrainingDay)
+    suspend fun deleteTrainingDay(dayToDelete: TrainingDay)
+    suspend fun getTrainingDaysByProgram(program: TrainingProgram) : List<TrainingDay>
 }

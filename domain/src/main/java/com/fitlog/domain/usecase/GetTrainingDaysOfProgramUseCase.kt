@@ -7,7 +7,7 @@ import com.fitlog.domain.repository.TrainingProgramRepository
 
 class GetTrainingDaysOfProgramUseCase (private val programRepository: TrainingProgramRepository, private val dayRepository: TrainingDayRepository){
 
-    fun execute(): List<TrainingDay> {
+    suspend fun execute(): List<TrainingDay> {
         return dayRepository.getTrainingDaysByProgram(programRepository.getCurrentProgram())
     }
 }

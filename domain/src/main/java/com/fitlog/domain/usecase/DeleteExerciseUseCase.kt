@@ -6,7 +6,7 @@ import com.fitlog.domain.repository.ExerciseReposiotry
 
 class DeleteExerciseUseCase (private val exerciseReposiotry: ExerciseReposiotry){
 
-    fun execute(exerciseToDelete: Exercise){
+    suspend fun execute(exerciseToDelete: Exercise){
         exerciseReposiotry.deleteExercise(exerciseToDelete)
     }
 }

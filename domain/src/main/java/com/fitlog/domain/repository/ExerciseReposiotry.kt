@@ -5,11 +5,7 @@ import com.fitlog.domain.models.TrainingDay
 
 
 interface ExerciseReposiotry {
-
-    fun addExercise(newExercise: Exercise, trainingDay: TrainingDay)
-
-    fun deleteExercise(exerciseToDelete: Exercise)
-
-    fun getExercisesByTrainingDay(trainingDay: TrainingDay) : List<Exercise>
-
+    suspend fun addExercise(newExercise: Exercise)
+    suspend fun deleteExercise(exerciseToDelete: Exercise)
+    suspend fun getExercisesByTrainingDay(trainingDay: TrainingDay) : List<Exercise>
 }

@@ -5,7 +5,7 @@ import com.fitlog.domain.models.TrainingProgram
 import com.fitlog.domain.repository.TrainingProgramRepository
 
 class GetCurrentProgramUseCase (private val repository: TrainingProgramRepository){
-    fun execute(): TrainingProgram {
+    suspend fun execute(): TrainingProgram {
         return repository.getCurrentProgram()
     }
 }

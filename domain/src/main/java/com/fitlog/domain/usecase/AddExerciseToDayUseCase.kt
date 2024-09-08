@@ -7,7 +7,7 @@ import com.fitlog.domain.repository.ExerciseReposiotry
 
 class AddExerciseToDayUseCase(private val exerciseReposiotry: ExerciseReposiotry) {
 
-    fun execute(newExercise: Exercise, trainingDay: TrainingDay){
-        exerciseReposiotry.addExercise(newExercise, trainingDay)
+    suspend fun execute(newExercise: Exercise, trainingDay: TrainingDay){
+        exerciseReposiotry.addExercise(newExercise.copy(dayId = trainingDay.id))
     }
 }

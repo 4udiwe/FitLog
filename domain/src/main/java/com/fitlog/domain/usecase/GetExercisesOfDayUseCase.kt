@@ -7,7 +7,7 @@ import com.fitlog.domain.repository.ExerciseReposiotry
 
 class GetExercisesOfDayUseCase(private val exerciseReposiotry: ExerciseReposiotry) {
 
-    fun execute(trainingDay: TrainingDay): List<Exercise> {
+    suspend fun execute(trainingDay: TrainingDay): List<Exercise> {
         return exerciseReposiotry.getExercisesByTrainingDay(trainingDay)
     }
 }
