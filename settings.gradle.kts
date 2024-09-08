@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "FitLog"
 include(":app")
+include(":data")
+include(":domain")

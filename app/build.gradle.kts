@@ -58,6 +58,8 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(project(":data"))
+    implementation(project(":domain"))
     kapt(libs.androidx.room.compiler)
 
     implementation(libs.androidx.core.ktx)
