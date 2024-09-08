@@ -14,20 +14,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
 import com.fitlog.app.navigation.BottomNavigation
 import com.fitlog.app.navigation.NavGraph
+import com.fitlog.app.viewmodel.SettingViewModel
+import com.fitlog.app.viewmodel.TrainingViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    programViewModel: ProgramViewModel = viewModel(factory = ProgramViewModel.factory)
-
+    trainingViewModel: TrainingViewModel,
+    programViewModel: ProgramViewModel,
+    settingViewModel: SettingViewModel,
+    owner: LifecycleOwner
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -39,7 +44,14 @@ fun MainScreen(
         }
     ) {
         values ->
-        NavGraph(navHostController = navController, values, programViewModel)
+        NavGraph(
+            navHostController = navController,
+            paddingValues = values,
+            trainingViewModel = trainingViewModel,
+            programViewModel = programViewModel,
+            settingViewModel = settingViewModel,
+            owner = owner
+        )
     }
 }
 

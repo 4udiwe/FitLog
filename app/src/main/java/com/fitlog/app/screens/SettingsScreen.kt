@@ -30,21 +30,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LifecycleOwner
 import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
 import com.example.fitlog.data.db.ProgramDB
 import com.example.fitlog.data.models.TrainingProgramDB
+import com.fitlog.app.viewmodel.SettingViewModel
+import com.fitlog.domain.models.TrainingProgram
 
 
 @Composable
 fun SettingsScreen(
     paddingValues: PaddingValues,
-    programViewModel: ProgramViewModel// = viewModel(factory = ProgramViewModel.factory)
+    vm: SettingViewModel,
+    owner: LifecycleOwner
 ){
+    var currentProgram: TrainingProgram? = null
+    vm.currentProgram.observe(owner) { currentProgram = it }
+
+    var programsList: List<TrainingProgram>? = null
+    vm.allProgramsList.observe(owner) {programsList = it}
+
+
     val editProgramsState = remember {
         mutableStateOf(false)
     }
-    val currentProgram = programViewModel.getCurrentProgram().collectAsState(com.example.fitlog.data.db.ProgramDB())
     if (editProgramsState.value){
         EditProgramsDialog(
             programViewModel = programViewModel,
@@ -82,7 +92,7 @@ fun SettingsScreen(
                         editProgramsState.value = true
                     }
                 ) {
-                    Text(text = currentProgram.value?.program?.name ?: "Choose program")
+                    Text(text = currentProgram?.name ?: "Choose program")
                 }
             }
         }
@@ -91,12 +101,11 @@ fun SettingsScreen(
 
 @Composable
 fun EditProgramsDialog(
-    programViewModel: ProgramViewModel,
+    currentProgram: TrainingProgram,
+    programsList: List<TrainingProgram>,
     state: MutableState<Boolean>
 ){
-    val listPrograms = programViewModel.getPrograms().collectAsState(initial = emptyList())
-
-    val chosedProgram = remember { mutableStateOf(com.example.fitlog.data.db.ProgramDB()) }
+    val chosedProgram = remember { mutableStateOf(currentProgram) }
     val deleteProgramState = remember { mutableStateOf(false) }
     val addProgramState = remember { mutableStateOf(false) }
 
@@ -139,7 +148,7 @@ fun EditProgramsDialog(
                         .fillMaxWidth()
                         .padding(top = 6.dp)
                 ){
-                    items(listPrograms.value){
+                    items(programsList.value){
                             program ->
                         Row (
                             Modifier

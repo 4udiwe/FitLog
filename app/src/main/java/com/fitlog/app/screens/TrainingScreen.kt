@@ -44,12 +44,13 @@ import com.example.fitlog.R
 import com.example.fitlog.data.models.ExerciseDB
 import com.example.fitlog.data.models.TrainingDayDB
 import com.example.fitlog.db.TrainingDayDBSaver
+import com.fitlog.app.viewmodel.TrainingViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun TrainingScreen(
     paddingValues: PaddingValues,
-    programViewModel: ProgramViewModel// = viewModel(factory = ProgramViewModel.factory)
+    vm: TrainingViewModel
 ){
     val currentDay = rememberSaveable(stateSaver = TrainingDayDBSaver) {
         mutableStateOf(com.example.fitlog.data.models.TrainingDayDB(name = ""))

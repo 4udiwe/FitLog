@@ -39,7 +39,7 @@ import com.example.fitlog.data.models.TrainingDayDB
 @Composable
 fun ProgramScreen(
     paddingValues: PaddingValues,
-    programViewModel: ProgramViewModel// = viewModel(factory = ProgramViewModel.factory)
+    vm: ProgramViewModel
 ){
     val editDayState = remember { mutableStateOf(false) }
     val addDayState = remember { mutableStateOf(false) }
