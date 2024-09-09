@@ -6,6 +6,8 @@ import com.fitlog.data.models.TrainingDayDB
 import com.fitlog.domain.models.TrainingDay
 import com.fitlog.domain.models.TrainingProgram
 import com.fitlog.domain.repository.TrainingDayRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class TrainingDayRepositoryImpl(
     private val dayDao: DayDao
@@ -22,6 +24,10 @@ class TrainingDayRepositoryImpl(
         dayToDelete.programId
     ))
 
-    override suspend fun getTrainingDaysByProgram(program: TrainingProgram): List<TrainingDay> = dayDao.daysOfProgram(program.id).map { it.toDomainTrainingDayModel() }
-
+    override fun getTrainingDaysByProgram(program: TrainingProgram): Flow<List<TrainingDay>> =
+        dayDao.daysOfProgram(program.id).map { list->
+            list.map {
+                it.toDomainTrainingDayModel()
+            }
+        }
 }

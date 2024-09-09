@@ -37,7 +37,7 @@ val domainModule = module {
         GetExercisesOfDayUseCase(exerciseReposiotry = get())
     }
     factory<GetTrainingDaysOfProgramUseCase> {
-        GetTrainingDaysOfProgramUseCase(programRepository = get(), dayRepository = get())
+        GetTrainingDaysOfProgramUseCase(dayRepository = get())
     }
     factory<SetCurrentProgramUseCase> {
         SetCurrentProgramUseCase(programRepository = get())

@@ -18,7 +18,7 @@ interface ExerciseDao {
     fun all() : Flow<List<ExerciseDB>>
 
     @Query ("select * from exercises where training_day_id == :id")
-    suspend fun exercisesOfDay(id: Int?) : List<ExerciseDB>
+    fun exercisesOfDay(id: Int?) : Flow<List<ExerciseDB>>
 
     @Query ("select * from exercises where exercise_id == :id")
     suspend fun findExercise(id : Int) : ExerciseDB

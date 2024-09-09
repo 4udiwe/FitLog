@@ -21,6 +21,6 @@ interface DayDao {
     fun all() : Flow<List<TrainingDayDB>>
 
     @Query("select * from training_days where training_program_id == :id")
-    suspend fun daysOfProgram(id: Int?) : List<TrainingDayDB>
+    fun daysOfProgram(id: Int?) : Flow<List<TrainingDayDB>>
 
 }

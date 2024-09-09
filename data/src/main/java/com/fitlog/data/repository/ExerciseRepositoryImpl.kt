@@ -6,6 +6,8 @@ import com.fitlog.data.models.ExerciseDB
 import com.fitlog.domain.models.Exercise
 import com.fitlog.domain.models.TrainingDay
 import com.fitlog.domain.repository.ExerciseReposiotry
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class ExerciseRepositoryImpl(
     private val exerciseDao: ExerciseDao
@@ -33,6 +35,10 @@ class ExerciseRepositoryImpl(
         )
     )
 
-    override suspend fun getExercisesByTrainingDay(trainingDay: TrainingDay): List<Exercise> = exerciseDao.exercisesOfDay(trainingDay.id).map { it.toDomainExerciseModel() }
-
+    override fun getExercisesByTrainingDay(trainingDay: TrainingDay): Flow<List<Exercise>> =
+        exerciseDao.exercisesOfDay(trainingDay.id).map { list ->
+            list.map {
+                it.toDomainExerciseModel()
+            }
+        }
 }

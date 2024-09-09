@@ -24,6 +24,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,7 +52,7 @@ fun SettingsScreen(
         Log.d("RRR", "current program live = $currentProgram")
     }
 
-    var programsList: List<TrainingProgram>? = null
+    var programsList: State<List<TrainingProgram>>? = vm.programsList?.collectAsState(initial = emptyList())
     vm.allProgramsList.observe(owner) {programsList = it}
 
 

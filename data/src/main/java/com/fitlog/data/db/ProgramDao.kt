@@ -17,9 +17,9 @@ interface ProgramDao {
     suspend fun deleteProgram(program: TrainingProgramDB)
 
     @Query ("select * from training_programs")
-    suspend fun all() : List<TrainingProgramDB>
+    fun all() : Flow<List<TrainingProgramDB>>
 
     @Query ("SELECT * FROM training_programs WHERE is_current = 1 LIMIT 1")
-    suspend fun getCurrentProgram() : TrainingProgramDB
+    fun getCurrentProgram() : Flow<TrainingProgramDB>
 
 }

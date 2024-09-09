@@ -5,13 +5,15 @@ import com.fitlog.data.db.ProgramDao
 import com.fitlog.data.models.TrainingProgramDB
 import com.fitlog.domain.models.TrainingProgram
 import com.fitlog.domain.repository.TrainingProgramRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class TrainingProgramRepositoryImpl(
     private val programDao: ProgramDao
 ) : TrainingProgramRepository {
 
-    override suspend fun getCurrentProgram(): TrainingProgram? =
-        programDao.getCurrentProgram()?.toDomainTrainingProgramModel()
+    override suspend fun getCurrentProgram(): Flow<TrainingProgram> =
+        programDao.getCurrentProgram().map { it.toDomainTrainingProgramModel() }
 
 
     override suspend fun addProgram(program: TrainingProgram) =
@@ -33,5 +35,8 @@ class TrainingProgramRepositoryImpl(
                 current = program.current)
         )
 
-    override suspend fun getAllPrograms(): List<TrainingProgram> = programDao.all().map { it.toDomainTrainingProgramModel() }
+    override suspend fun getAllPrograms(): Flow<List<TrainingProgram>> =
+        programDao.all().map { list ->
+            list.map { it.toDomainTrainingProgramModel() }
+            }
 }
