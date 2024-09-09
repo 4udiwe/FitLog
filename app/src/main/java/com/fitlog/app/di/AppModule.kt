@@ -31,7 +31,9 @@ val appModule = module {
         SettingViewModel(
             getCurrentProgramUseCase = get(),
             setCurrentProgramUseCase = get(),
-            getAllProgramsUseCase = get()
+            getAllProgramsUseCase = get(),
+            addTrainingProgramUseCase = get(),
+            deleteTrainingProgramUseCase = get()
         )
     }
 }

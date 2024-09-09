@@ -14,7 +14,7 @@ class TrainingProgramRepositoryImpl(
         programDao.getCurrentProgram()?.toDomainTrainingProgramModel()
 
 
-    override suspend fun setProgram(program: TrainingProgram) =
+    override suspend fun addProgram(program: TrainingProgram) =
         programDao.addProgram(
             TrainingProgramDB(
                 name = program.name,

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,7 +44,7 @@ fun SettingsScreen(
     vm: SettingViewModel,
     owner: LifecycleOwner
 ){
-    /*
+
     var currentProgram: TrainingProgram? = null
     vm.currentProgram.observe(owner) { currentProgram = it }
 
@@ -56,8 +57,10 @@ fun SettingsScreen(
     }
     if (editProgramsState.value){
         EditProgramsDialog(
-            programViewModel = programViewModel,
-            state = editProgramsState
+            state = editProgramsState,
+            currentProgram = currentProgram,
+            programsList = programsList,
+            vm = vm
         )
     }
 
@@ -97,14 +100,15 @@ fun SettingsScreen(
         }
     }
 
-     */
+
 }
-/*
+
 @Composable
 fun EditProgramsDialog(
-    currentProgram: TrainingProgram,
-    programsList: List<TrainingProgram>,
-    state: MutableState<Boolean>
+    currentProgram: TrainingProgram?,
+    programsList: List<TrainingProgram>?,
+    state: MutableState<Boolean>,
+    vm: SettingViewModel
 ){
     val chosedProgram = remember { mutableStateOf(currentProgram) }
     val deleteProgramState = remember { mutableStateOf(false) }
@@ -112,7 +116,7 @@ fun EditProgramsDialog(
 
     if (addProgramState.value){
         AddProgramDialog(
-            programViewModel = programViewModel,
+            vm = vm,
             state = addProgramState
         )
     }
@@ -149,7 +153,7 @@ fun EditProgramsDialog(
                         .fillMaxWidth()
                         .padding(top = 6.dp)
                 ){
-                    items(programsList.value){
+                    items(programsList ?: emptyList()){
                             program ->
                         Row (
                             Modifier
@@ -161,12 +165,12 @@ fun EditProgramsDialog(
                             Column (modifier = Modifier
                                 .fillMaxWidth(0.7f)
                                 .clickable {
-                                    programViewModel.changeProgram(program)
+                                    vm.setCurrentProgram(program)
                                     state.value = false
                                 }
                             ){
-                                Text(text = program.program.name)
-                                Text(text = program.program.desc, color = Color.Gray)
+                                Text(text = program.name)
+                                Text(text = program.desc, color = Color.Gray)
                             }
                             IconButton(onClick = {
                                 chosedProgram.value = program
@@ -192,7 +196,7 @@ fun EditProgramsDialog(
 
 @Composable
 fun AddProgramDialog(
-    programViewModel: ProgramViewModel,
+    vm: SettingViewModel,
     state: MutableState<Boolean>
 ) {
     val programName = remember {
@@ -209,6 +213,7 @@ fun AddProgramDialog(
         onDismissRequest = { state.value = false },
         confirmButton = {
             TextButton(onClick = {
+                vm.
                 programViewModel.currentProgram?.program?.current = false
 
                 programViewModel.addProgram(
@@ -275,7 +280,3 @@ fun DeleteProgramDialog(
         }
     )
 }
-
-
-
- */

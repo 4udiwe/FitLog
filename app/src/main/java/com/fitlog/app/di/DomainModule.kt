@@ -2,8 +2,10 @@ package com.fitlog.app.di
 
 import com.fitlog.domain.usecase.AddExerciseToDayUseCase
 import com.fitlog.domain.usecase.AddTrainingDayToProgramUseCase
+import com.fitlog.domain.usecase.AddTrainingProgramUseCase
 import com.fitlog.domain.usecase.DeleteExerciseUseCase
 import com.fitlog.domain.usecase.DeleteTrainingDayUseCase
+import com.fitlog.domain.usecase.DeleteTrainingProgramUseCase
 import com.fitlog.domain.usecase.GetAllProgramsUseCase
 import com.fitlog.domain.usecase.GetCurrentProgramUseCase
 import com.fitlog.domain.usecase.GetExercisesOfDayUseCase
@@ -39,6 +41,12 @@ val domainModule = module {
     }
     factory<SetCurrentProgramUseCase> {
         SetCurrentProgramUseCase(programRepository = get())
+    }
+    factory<AddTrainingProgramUseCase> {
+        AddTrainingProgramUseCase(programRepository = get())
+    }
+    factory<DeleteTrainingProgramUseCase> {
+        DeleteTrainingProgramUseCase(programRepository = get())
     }
 
 }
