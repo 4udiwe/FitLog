@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +23,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -33,26 +35,33 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
+import com.fitlog.domain.models.Exercise
+import com.fitlog.domain.models.TrainingDay
+import com.fitlog.domain.models.TrainingProgram
+
 @Composable
 fun ProgramScreen(
     paddingValues: PaddingValues,
     vm: ProgramViewModel
 ){
-    /*
+
     val editDayState = remember { mutableStateOf(false) }
     val addDayState = remember { mutableStateOf(false) }
     val deleteDayState = remember { mutableStateOf(false) }
-    val listDays = programViewModel.getDays().collectAsState(initial = emptyList())
+
+
+    val currentProgram: State<TrainingProgram?> = vm.currentProgramFlow.collectAsState(initial = TrainingProgram(name = "", desc = ""))
+    val listDays = currentProgram.value?.let { vm.getDays(it).collectAsState(initial = emptyList()) }
 
     if (editDayState.value){
-        programViewModel.selectedDay?.let { EditDayDialog(trainingDayDb = it, programViewModel = programViewModel, editDayState) }
+        EditDayDialog(vm = vm, state = editDayState)
     }
     if (addDayState.value){
-        AddDayDialog(programViewModel = programViewModel, state = addDayState)
+        AddDayDialog(vm = vm, state = addDayState, program = currentProgram.value!!)
     }
 
     if (deleteDayState.value){
-        programViewModel.selectedDay?.let { DeleteDayDialog(day = it, programViewModel = programViewModel, state = deleteDayState) }
+        DeleteDayDialog(vm = vm, state = deleteDayState)
     }
 
     Column(
@@ -64,22 +73,26 @@ fun ProgramScreen(
     ){
 
         Text("Training program")
-        programViewModel.currentProgram?.program?.let { Text(text = it.name) }
+        Text(text = currentProgram.value?.name ?: "")
         LazyColumn {
-            items(listDays.value){
-                TrainingDayCard(
-                    trainingDayDb = it,
-                    programViewModel = programViewModel,
-                    onClickEdit = {
-                        programViewModel.selectedDay = it
-                        editDayState.value = true
+            if (listDays != null) {
+                items(listDays.value)
+                {
 
-                    },
-                    onClickDelete = {
-                        programViewModel.selectedDay = it
-                        deleteDayState.value = true
-                    }
-                )
+                    TrainingDayCard(
+                        trainingDay = it,
+                        vm = vm,
+                        onClickEdit = {
+                            vm.selectedDay = it
+                            editDayState.value = true
+
+                        },
+                        onClickDelete = {
+                            vm.selectedDay = it
+                            deleteDayState.value = true
+                        }
+                    )
+                }
             }
             item {
                 AddButton(onClick = {
@@ -89,14 +102,13 @@ fun ProgramScreen(
         }
     }
 
-     */
 }
-/*
+
 @Composable
 fun TrainingDayCard(
-    trainingDayDb: com.example.fitlog.data.models.TrainingDayDB,
-    programViewModel: ProgramViewModel,
-    onClickEdit: (com.example.fitlog.data.models.TrainingDayDB) -> Unit,
+    trainingDay: TrainingDay,
+    vm: ProgramViewModel,
+    onClickEdit: (TrainingDay) -> Unit,
     onClickDelete: () -> Unit
 ){
     Card(
@@ -104,14 +116,14 @@ fun TrainingDayCard(
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                onClickEdit.invoke(trainingDayDb)
+                onClickEdit.invoke(trainingDay)
             }
     ) {
         Column (
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            Text(text = trainingDayDb.name)
+            Text(text = trainingDay.name)
             Row (
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -119,11 +131,9 @@ fun TrainingDayCard(
                 Column(
                     modifier = Modifier.padding(start = 40.dp,top = 5.dp)
                 ){
-                    trainingDayDb.id?.let {
-                        programViewModel.getExercises(trainingDayDb).forEachIndexed{
-                            index, exercise ->
+                    vm.getExercises(trainingDay).collectAsState(initial = emptyList()).value.forEachIndexed{
+                        index, exercise ->
                         Text(text = "${index + 1}: ${exercise.name}")
-                        }
                     }
                 }
                 IconButton(onClick = {
@@ -139,8 +149,9 @@ fun TrainingDayCard(
 
 @Composable
 fun AddDayDialog(
-    programViewModel: ProgramViewModel,
-    state: MutableState<Boolean>
+    vm: ProgramViewModel,
+    state: MutableState<Boolean>,
+    program: TrainingProgram
 ) {
     val dayName = remember {
         mutableStateOf("")
@@ -153,12 +164,7 @@ fun AddDayDialog(
         onDismissRequest = { state.value = false },
         confirmButton = {
             TextButton(onClick = {
-                programViewModel.addDay(
-                    com.example.fitlog.data.models.TrainingDayDB(
-                        name = dayName.value,
-                        programId = programViewModel.currentProgram?.program?.id
-                    )
-                )
+                vm.addDay(newDay = TrainingDay(name = dayName.value), program = program)
                 state.value = false
             }) {
                 Text(text = "Add new day")
@@ -189,10 +195,10 @@ fun AddDayDialog(
 
 @Composable
 fun EditDayDialog(
-    trainingDayDb: com.example.fitlog.data.models.TrainingDayDB,
-    programViewModel: ProgramViewModel,
+    vm: ProgramViewModel,
     state: MutableState<Boolean>
 ){
+    val trainingDay = vm.selectedDay!!
     val addExerState = remember {
         mutableStateOf(false)
     }
@@ -202,19 +208,17 @@ fun EditDayDialog(
     val deleteExerState = remember {
         mutableStateOf(false)
     }
-    val currentExer = remember {
-        mutableStateOf(com.example.fitlog.data.models.ExerciseDB())
-    }
+
     if (addExerState.value){
-        AddExerDialog(trainingDayDb = trainingDayDb, programViewModel = programViewModel, state = addExerState)
+        AddExerDialog(vm = vm, state = addExerState)
     }
     if (deleteExerState.value){
-        DeleteExerDialog(exercise = currentExer.value, programViewModel = programViewModel, state = deleteExerState)
+        DeleteExerDialog(vm = vm, state = deleteExerState)
     }
     if (editExerState.value)
         EditExerDialog(
-            exercise = currentExer.value,
-            programViewModel = programViewModel,
+            vm = vm,
+            day = trainingDay,
             state = editExerState
         )
     AlertDialog(
@@ -227,7 +231,7 @@ fun EditDayDialog(
                 Text(text = "Done")
             }
         },
-        title = {Text("Edit exercises of day: ${trainingDayDb.name}")},
+        title = {Text("Edit exercises of day: ${trainingDay.name}")},
         text = {
             Column(
                 Modifier
@@ -235,19 +239,19 @@ fun EditDayDialog(
                     .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                LazyColumn (
+                Column (
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 6.dp)
+                        .padding(top = 6.dp),
                 ){
-                    items(programViewModel.getExercises(trainingDayDb)){
+                    vm.getExercises(trainingDay).collectAsState(initial = emptyList()).value.forEach{
                             exercise ->
                         Row (
                             Modifier
                                 .fillMaxWidth()
                                 .padding(4.dp)
                                 .clickable {
-                                    currentExer.value = exercise
+                                    vm.selectedExercise = exercise
                                     editExerState.value = true
                                 },
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -265,30 +269,32 @@ fun EditDayDialog(
                                 }
                             }
                             IconButton(onClick = {
-                                currentExer.value = exercise
+                                vm.selectedExercise = exercise
                                 deleteExerState.value = true
                             }) {
                                 Icon(painter = painterResource(id = R.drawable.baseline_delete_24), contentDescription = "delete button")
                             }
                         }
                     }
-                    item {
-                        AddButton (onClick = {
-                            addExerState.value = true
-                        })
-                    }
+                    AddButton (onClick = {
+
+                        addExerState.value = true
+                    })
                 }
             }
         }
     )
 }
 @Composable
-fun DeleteDayDialog(day: com.example.fitlog.data.models.TrainingDayDB, programViewModel: ProgramViewModel, state: MutableState<Boolean>) {
+fun DeleteDayDialog(
+    vm: ProgramViewModel,
+    state: MutableState<Boolean>
+) {
     AlertDialog(
         onDismissRequest = { state.value = false },
         confirmButton = {
             TextButton(onClick = {
-                programViewModel.deleteDay(day)
+                vm.deleteDay(vm.selectedDay!!)
                 state.value = false
             }) {
                 Text("Delete")
@@ -300,18 +306,21 @@ fun DeleteDayDialog(day: com.example.fitlog.data.models.TrainingDayDB, programVi
             }
         },
         title = {
-            Text(text = "Delete ${day.name}?")
+            Text(text = "Delete ${vm.selectedDay!!.name}?")
         }
     )
 }
 
 @Composable
-fun DeleteExerDialog(exercise: com.example.fitlog.data.models.ExerciseDB, programViewModel: ProgramViewModel, state: MutableState<Boolean>) {
+fun DeleteExerDialog(
+    vm: ProgramViewModel,
+    state: MutableState<Boolean>
+) {
     AlertDialog(
         onDismissRequest = { state.value = false },
         confirmButton = {
             TextButton(onClick = {
-                programViewModel.deleteExer(exercise)
+                vm.deleteExercise(vm.selectedExercise!!)
                 state.value = false
             }) {
                 Text("Delete")
@@ -323,21 +332,20 @@ fun DeleteExerDialog(exercise: com.example.fitlog.data.models.ExerciseDB, progra
             }
         },
         title = {
-                Text(text = "Delete ${exercise.name}?")
+                Text(text = "Delete ${vm.selectedExercise!!.name}?")
         }
     )
 }
 
 @Composable
 fun AddExerDialog(
-    trainingDayDb: com.example.fitlog.data.models.TrainingDayDB,
-    programViewModel: ProgramViewModel,
+    vm: ProgramViewModel,
     state: MutableState<Boolean>
 ) {
     val name = remember { mutableStateOf("") }
     val reps = remember { mutableIntStateOf(12) }
     val sets = remember { mutableIntStateOf(4) }
-    val rest = remember { mutableIntStateOf(300) }
+    val rest = remember { mutableIntStateOf(200) }
 
     val switchState = remember { mutableStateOf(false) }
 
@@ -351,14 +359,13 @@ fun AddExerDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    programViewModel.addExer(
-                        com.example.fitlog.data.models.ExerciseDB(
+                    vm.addExercise(
+                        Exercise(
                             name = name.value,
                             reps = reps.intValue,
                             sets = sets.intValue,
-                            restTime = rest.intValue,
-                            dayId = trainingDayDb.id
-                        )
+                            restTime = rest.intValue
+                        ), vm.selectedDay!!
                     )
                     state.value = false
                 }) {
@@ -370,7 +377,7 @@ fun AddExerDialog(
                 Text(text = "Cancel")
             }
         },
-        title = {Text("Edit day: ${trainingDayDb.name}")},
+        title = {Text("Edit day: ${vm.selectedDay!!.name}")},
         text = {
             Column (
                 Modifier.fillMaxWidth()
@@ -426,21 +433,21 @@ fun AddExerDialog(
 
 @Composable
 fun EditExerDialog(
-    exercise: com.example.fitlog.data.models.ExerciseDB,
-    programViewModel: ProgramViewModel,
+    day: TrainingDay,
+    vm: ProgramViewModel,
     state: MutableState<Boolean>
 ){
     val exerName = remember {
-        mutableStateOf(exercise.name)
+        mutableStateOf(vm.selectedExercise!!.name)
     }
     val exerSets = remember {
-        mutableIntStateOf(exercise.sets)
+        mutableIntStateOf(vm.selectedExercise!!.sets)
     }
     val exerReps = remember {
-        mutableIntStateOf(exercise.reps)
+        mutableIntStateOf(vm.selectedExercise!!.reps)
     }
     val exerTime = remember {
-        mutableIntStateOf(exercise.restTime)
+        mutableIntStateOf(vm.selectedExercise!!.restTime)
     }
     val showError = remember {
         mutableStateOf(false)
@@ -458,12 +465,12 @@ fun EditExerDialog(
                     || exerTime.intValue == 0)
                     showError.value = true
                 else {
-                    exercise.name = exerName.value
-                    exercise.sets = exerSets.intValue
-                    exercise.reps = exerReps.intValue
-                    exercise.restTime = exerTime.intValue
+                    vm.selectedExercise!!.name = exerName.value
+                    vm.selectedExercise!!.sets = exerSets.intValue
+                    vm.selectedExercise!!.reps = exerReps.intValue
+                    vm.selectedExercise!!.restTime = exerTime.intValue
 
-                    programViewModel.updateExer(exercise)
+                    vm.addExercise(vm.selectedExercise!!, day)
                     state.value = false
                 }
             }) {
@@ -525,4 +532,3 @@ fun EditExerDialog(
         }
     )
 }
-*/
