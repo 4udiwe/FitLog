@@ -6,7 +6,7 @@ import com.fitlog.domain.repository.TrainingProgramRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetCurrentProgramUseCase (private val repository: TrainingProgramRepository){
-    fun execute(): Flow<TrainingProgram> {
+    fun execute(): Flow<TrainingProgram?> {
         return repository.getCurrentProgram()
     }
 }

@@ -2,7 +2,7 @@
 
 package com.fitlog.app.screens
 
-import android.util.Log
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LifecycleOwner
 import com.example.fitlog.R
 import com.fitlog.app.viewmodel.SettingViewModel
 import com.fitlog.domain.models.TrainingProgram
@@ -42,18 +41,12 @@ import com.fitlog.domain.models.TrainingProgram
 @Composable
 fun SettingsScreen(
     paddingValues: PaddingValues,
-    vm: SettingViewModel,
-    owner: LifecycleOwner
+    vm: SettingViewModel
 ){
 
 
-    var currentProgram: TrainingProgram? = null
-    vm.currentProgram.observe(owner) { currentProgram = it
-        Log.d("RRR", "current program live = $currentProgram")
-    }
-
-    var programsList: State<List<TrainingProgram>>? = vm.programsList?.collectAsState(initial = emptyList())
-    vm.allProgramsList.observe(owner) {programsList = it}
+    val currentProgram = vm.currentProgramFlow.collectAsState(initial = TrainingProgram(name = "", desc = ""))
+    val programsList: State<List<TrainingProgram>> = vm.programsListFlow.collectAsState(initial = emptyList())
 
 
     val editProgramsState = remember {
@@ -62,12 +55,11 @@ fun SettingsScreen(
     if (editProgramsState.value){
         EditProgramsDialog(
             state = editProgramsState,
-            currentProgram = currentProgram,
-            programsList = programsList,
+            currentProgram = currentProgram.value,
+            programsList = programsList.value,
             vm = vm
         )
     }
-
 
     Column(
         modifier = Modifier
@@ -98,13 +90,11 @@ fun SettingsScreen(
                         editProgramsState.value = true
                     }
                 ) {
-                    Text(text = currentProgram?.name ?: "Choose program")
+                    Text(text = if (currentProgram.value == null) "Choose program" else currentProgram.value!!.name)
                 }
             }
         }
     }
-
-
 }
 
 @Composable
@@ -169,7 +159,7 @@ fun EditProgramsDialog(
                             Column (modifier = Modifier
                                 .fillMaxWidth(0.7f)
                                 .clickable {
-                                    vm.setCurrentProgram(program)
+                                    vm.setCurrentProgram(newCurrentProgram = program, currentProgram = currentProgram)
                                     state.value = false
                                 }
                             ){

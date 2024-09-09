@@ -19,7 +19,7 @@ val domainModule = module {
         AddExerciseToDayUseCase(exerciseReposiotry = get())
     }
     factory<AddTrainingDayToProgramUseCase> {
-        AddTrainingDayToProgramUseCase(dayRepository = get(), programRepository = get())
+        AddTrainingDayToProgramUseCase(dayRepository = get())
     }
     factory<DeleteExerciseUseCase> {
         DeleteExerciseUseCase(exerciseReposiotry = get())

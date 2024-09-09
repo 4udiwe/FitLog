@@ -6,9 +6,7 @@ import com.fitlog.domain.repository.TrainingProgramRepository
 
 class SetCurrentProgramUseCase(private val programRepository: TrainingProgramRepository) {
 
-    suspend fun execute(newCurrentProgram: TrainingProgram){
-
-        val currentProgram = programRepository.getCurrentProgram()
+    suspend fun execute(newCurrentProgram: TrainingProgram, currentProgram: TrainingProgram?){
         if (currentProgram != null) {
             programRepository.addProgram(currentProgram.copy(current = false))
         }

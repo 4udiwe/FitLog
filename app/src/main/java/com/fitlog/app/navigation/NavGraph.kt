@@ -33,7 +33,7 @@ fun NavGraph(
             ProgramScreen(paddingValues = paddingValues, vm = programViewModel)
         }
         composable("screen_3"){
-            SettingsScreen(paddingValues = paddingValues, vm = settingViewModel, owner = owner)
+            SettingsScreen(paddingValues = paddingValues, vm = settingViewModel)
         }
     }
 

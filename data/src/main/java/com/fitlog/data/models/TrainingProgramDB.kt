@@ -15,7 +15,7 @@ data class TrainingProgramDB (
     @ColumnInfo(name = "training_program_desc")
     var desc: String,
     @ColumnInfo(name = "is_current")
-    var current: Boolean = true
+    var current: Boolean = false
 ){
     fun toDomainTrainingProgramModel(): TrainingProgram{
         return TrainingProgram(
