@@ -44,6 +44,7 @@ fun SettingsScreen(
     owner: LifecycleOwner
 ){
 
+
     var currentProgram: TrainingProgram? = null
     vm.currentProgram.observe(owner) { currentProgram = it
         Log.d("RRR", "current program live = $currentProgram")
