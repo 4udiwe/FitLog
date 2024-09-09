@@ -11,7 +11,7 @@ class SetCurrentProgramUseCase(private val programRepository: TrainingProgramRep
         val currentProgram = programRepository.getCurrentProgram()
         if (currentProgram != null) {
             programRepository.addProgram(currentProgram.copy(current = false))
-            programRepository.addProgram(newCurrentProgram.copy(current = true))
         }
+        programRepository.addProgram(newCurrentProgram.copy(current = true))
     }
 }

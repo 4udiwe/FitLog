@@ -17,9 +17,9 @@ class TrainingProgramRepositoryImpl(
     override suspend fun addProgram(program: TrainingProgram) =
         programDao.addProgram(
             TrainingProgramDB(
+                id = program.id,
                 name = program.name,
                 desc = program.desc,
-                id = program.id,
                 current = program.current)
         )
 
@@ -27,9 +27,9 @@ class TrainingProgramRepositoryImpl(
     override suspend fun deleteProgram(program: TrainingProgram) =
         programDao.deleteProgram(
             TrainingProgramDB(
+                id = program.id,
                 name = program.name,
                 desc = program.desc,
-                id = program.id,
                 current = program.current)
         )
 

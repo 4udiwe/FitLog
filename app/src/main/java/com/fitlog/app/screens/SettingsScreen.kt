@@ -2,6 +2,7 @@
 
 package com.fitlog.app.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +24,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,7 +32,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
-import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
 import com.fitlog.app.viewmodel.SettingViewModel
 import com.fitlog.domain.models.TrainingProgram
@@ -46,7 +45,9 @@ fun SettingsScreen(
 ){
 
     var currentProgram: TrainingProgram? = null
-    vm.currentProgram.observe(owner) { currentProgram = it }
+    vm.currentProgram.observe(owner) { currentProgram = it
+        Log.d("RRR", "current program live = $currentProgram")
+    }
 
     var programsList: List<TrainingProgram>? = null
     vm.allProgramsList.observe(owner) {programsList = it}
@@ -122,8 +123,8 @@ fun EditProgramsDialog(
     }
     if (deleteProgramState.value){
         DeleteProgramDialog(
-            programDB = chosedProgram.value,
-            programViewModel = programViewModel,
+            program = chosedProgram.value!!,
+            vm = vm,
             state = deleteProgramState
         )
     }
@@ -213,14 +214,8 @@ fun AddProgramDialog(
         onDismissRequest = { state.value = false },
         confirmButton = {
             TextButton(onClick = {
-                vm.
-                programViewModel.currentProgram?.program?.current = false
-
-                programViewModel.addProgram(
-                    com.example.fitlog.data.models.TrainingProgramDB(
-                        name = programName.value,
-                        desc = programDesc.value
-                    )
+                vm.addProgram(
+                    TrainingProgram(name = programName.value, desc = programDesc.value)
                 )
                 state.value = false
             }) {
@@ -256,15 +251,15 @@ fun AddProgramDialog(
 
 @Composable
 fun DeleteProgramDialog(
-    programDB: com.example.fitlog.data.db.ProgramDB,
-    programViewModel: ProgramViewModel,
+    program: TrainingProgram,
+    vm: SettingViewModel,
     state: MutableState<Boolean>
 ) {
     AlertDialog(
         onDismissRequest = { state.value = false },
         confirmButton = {
             TextButton(onClick = {
-                programViewModel.deleteProgram(programDB)
+                vm.deleteProgram(program)
                 state.value = false
             }) {
                 Text("Delete")
@@ -276,7 +271,7 @@ fun DeleteProgramDialog(
             }
         },
         title = {
-            Text(text = "Delete ${programDB.program.name}?")
+            Text(text = "Delete ${program.name}?")
         }
     )
 }

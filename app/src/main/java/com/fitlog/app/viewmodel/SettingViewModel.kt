@@ -1,5 +1,6 @@
 package com.fitlog.app.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -36,13 +37,32 @@ class SettingViewModel(
 
     fun getCurrentProgram() = viewModelScope.launch {
         currentProgramLiveMutable.value = getCurrentProgramUseCase.execute()
+        Log.d("RRR", "Get current program ${currentProgramLiveMutable.value}")
     }
     fun setAllProgramsList() = viewModelScope.launch {
+        Log.d("RRR", "Get all programs")
         allProgramsListLiveMutable.value = getAllProgramsUseCase.execute()
     }
+    fun setCurrentProgram(newCurrentProgram: TrainingProgram) = viewModelScope.launch{
 
-    fun setCurrentProgram(newCurrentProgram: TrainingProgram) = viewModelScope.launch {
-        setCurrentProgramUseCase.execute(newCurrentProgram)
+        val job = viewModelScope.launch {
+            Log.d("RRR", "set current program: $newCurrentProgram")
+            setCurrentProgramUseCase.execute(newCurrentProgram = newCurrentProgram)
+        }
+        job.join()
+        val job1 = getCurrentProgram()
+        job1.join()
+
     }
 
+    fun addProgram(newProgram: TrainingProgram) = viewModelScope.launch {
+        Log.d("RRR", "add program")
+
+        addTrainingProgramUseCase.execute(newProgram = newProgram)
+    }
+    fun deleteProgram(program: TrainingProgram) = viewModelScope.launch {
+        Log.d("RRR", "delete program")
+
+        deleteTrainingProgramUseCase.execute(programToDelete = program)
+    }
 }
