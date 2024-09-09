@@ -10,8 +10,8 @@ class TrainingProgramRepositoryImpl(
     private val programDao: ProgramDao
 ) : TrainingProgramRepository {
 
-    override suspend fun getCurrentProgram(): TrainingProgram =
-        programDao.getCurrentProgram().toDomainTrainingProgramModel()
+    override suspend fun getCurrentProgram(): TrainingProgram? =
+        programDao.getCurrentProgram()?.toDomainTrainingProgramModel()
 
 
     override suspend fun setProgram(program: TrainingProgram) =

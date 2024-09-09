@@ -33,8 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
-import com.example.fitlog.data.db.ProgramDB
-import com.example.fitlog.data.models.TrainingProgramDB
 import com.fitlog.app.viewmodel.SettingViewModel
 import com.fitlog.domain.models.TrainingProgram
 
@@ -45,6 +43,7 @@ fun SettingsScreen(
     vm: SettingViewModel,
     owner: LifecycleOwner
 ){
+    /*
     var currentProgram: TrainingProgram? = null
     vm.currentProgram.observe(owner) { currentProgram = it }
 
@@ -97,8 +96,10 @@ fun SettingsScreen(
             }
         }
     }
-}
 
+     */
+}
+/*
 @Composable
 fun EditProgramsDialog(
     currentProgram: TrainingProgram,
@@ -275,3 +276,6 @@ fun DeleteProgramDialog(
     )
 }
 
+
+
+ */

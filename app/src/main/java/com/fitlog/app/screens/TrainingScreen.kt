@@ -41,9 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
-import com.example.fitlog.data.models.ExerciseDB
-import com.example.fitlog.data.models.TrainingDayDB
-import com.example.fitlog.db.TrainingDayDBSaver
 import com.fitlog.app.viewmodel.TrainingViewModel
 import kotlinx.coroutines.delay
 
@@ -52,6 +49,7 @@ fun TrainingScreen(
     paddingValues: PaddingValues,
     vm: TrainingViewModel
 ){
+    /*
     val currentDay = rememberSaveable(stateSaver = TrainingDayDBSaver) {
         mutableStateOf(com.example.fitlog.data.models.TrainingDayDB(name = ""))
     }
@@ -102,8 +100,10 @@ fun TrainingScreen(
             }
         }
     }
-}
 
+     */
+}
+/*
 @Preview(showBackground = true, backgroundColor = 5)
 @Composable
 fun ExerciseCard(
@@ -273,3 +273,6 @@ fun Timer(
     Text(text = (currentTime/1000L).toString())
 
 }
+}
+
+ */

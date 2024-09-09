@@ -19,7 +19,7 @@ interface ProgramDao {
     @Query ("select * from training_programs")
     suspend fun all() : List<TrainingProgramDB>
 
-    @Query ("select * from training_programs where is_current == 1")
+    @Query ("SELECT * FROM training_programs WHERE is_current = 1 UNION ALL SELECT * FROM training_programs WHERE is_current = 1 LIMIT 1")
     suspend fun getCurrentProgram() : TrainingProgramDB
 
 }

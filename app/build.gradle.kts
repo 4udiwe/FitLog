@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("kotlin-kapt")
+
 }
 
 android {
@@ -57,13 +57,13 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     //viewmodel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.4")
+    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     //navigation
     implementation(libs.androidx.navigation.compose)
-    //room db
+    //db
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

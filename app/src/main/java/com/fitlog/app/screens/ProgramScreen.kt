@@ -33,14 +33,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
-import com.example.fitlog.data.models.ExerciseDB
-import com.example.fitlog.data.models.TrainingDayDB
-
 @Composable
 fun ProgramScreen(
     paddingValues: PaddingValues,
     vm: ProgramViewModel
 ){
+    /*
     val editDayState = remember { mutableStateOf(false) }
     val addDayState = remember { mutableStateOf(false) }
     val deleteDayState = remember { mutableStateOf(false) }
@@ -90,8 +88,10 @@ fun ProgramScreen(
             }
         }
     }
-}
 
+     */
+}
+/*
 @Composable
 fun TrainingDayCard(
     trainingDayDb: com.example.fitlog.data.models.TrainingDayDB,
@@ -525,3 +525,4 @@ fun EditExerDialog(
         }
     )
 }
+*/

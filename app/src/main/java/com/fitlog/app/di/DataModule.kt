@@ -1,5 +1,6 @@
 package com.fitlog.app.di
 
+import androidx.room.Room
 import com.fitlog.data.db.DayDao
 import com.fitlog.data.db.ExerciseDao
 import com.fitlog.data.db.ProgramDao
@@ -14,25 +15,35 @@ import org.koin.dsl.module
 
 val dataModule = module {
 
+    single<TrainingProgramDataBase> {
+        Room.databaseBuilder(context = get(), TrainingProgramDataBase::class.java, "programs.db")
+            .createFromAsset("database/training_programs.db")
+            .build()
+    }
     single<ProgramDao> {
-        TrainingProgramDataBase.createDB(context = get()).programs()
+        val db = get<TrainingProgramDataBase>()
+        db.programs()
     }
     single<DayDao> {
-        TrainingProgramDataBase.createDB(context = get()).days()
+        val db = get<TrainingProgramDataBase>()
+        db.days()
     }
     single<ExerciseDao> {
-        TrainingProgramDataBase.createDB(context = get()).exercises()
+        val db = get<TrainingProgramDataBase>()
+        db.exercises()
     }
 
 
-    single<TrainingProgramRepository> {
+    factory<TrainingProgramRepository>{
         TrainingProgramRepositoryImpl(programDao = get())
     }
-    single<TrainingDayRepository> {
+    factory<TrainingDayRepository> {
         TrainingDayRepositoryImpl(dayDao = get())
     }
-    single<ExerciseReposiotry> {
+    factory<ExerciseReposiotry> {
         ExerciseRepositoryImpl(exerciseDao =  get())
     }
+
+
 
 }

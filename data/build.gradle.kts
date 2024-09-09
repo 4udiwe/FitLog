@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -33,6 +34,9 @@ android {
 }
 
 dependencies {
+    //room db
+    kapt(libs.androidx.room.compiler)
+
     implementation(libs.androidx.core.ktx)
     implementation(project(":domain"))
     implementation(libs.androidx.room.common)

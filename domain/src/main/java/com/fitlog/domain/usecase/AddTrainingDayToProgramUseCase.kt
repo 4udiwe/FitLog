@@ -12,6 +12,8 @@ class AddTrainingDayToProgramUseCase(
     suspend fun execute(newTrainingDay: TrainingDay){
         val currentProgram = programRepository.getCurrentProgram()
 
-        dayRepository.addTrainingDay(newTrainingDay.copy(programId = currentProgram.id))
+        if (currentProgram != null) {
+            dayRepository.addTrainingDay(newTrainingDay.copy(programId = currentProgram.id))
+        }
     }
 }

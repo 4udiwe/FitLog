@@ -9,7 +9,9 @@ class SetCurrentProgramUseCase(private val programRepository: TrainingProgramRep
     suspend fun execute(newCurrentProgram: TrainingProgram){
 
         val currentProgram = programRepository.getCurrentProgram()
-        programRepository.setProgram(currentProgram.copy(current = false))
-        programRepository.setProgram(newCurrentProgram.copy(current = true))
+        if (currentProgram != null) {
+            programRepository.setProgram(currentProgram.copy(current = false))
+            programRepository.setProgram(newCurrentProgram.copy(current = true))
+        }
     }
 }

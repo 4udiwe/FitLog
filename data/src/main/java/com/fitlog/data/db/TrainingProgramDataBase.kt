@@ -1,8 +1,7 @@
 package com.fitlog.data.db
 
-import android.content.Context
+
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.fitlog.data.models.ExerciseDB
 import com.fitlog.data.models.TrainingDayDB
@@ -22,15 +21,19 @@ abstract class TrainingProgramDataBase : RoomDatabase() {
     abstract fun days() : DayDao
     abstract fun programs() : ProgramDao
 
-    companion object {
-        fun createDB(context: Context) : TrainingProgramDataBase {
-            return Room.databaseBuilder(
-                context,
-                TrainingProgramDataBase::class.java,
-                "programs.db"
-            )
-                .createFromAsset("database/training_programs.db")
-                .build()
+    //abstract fun createDB() : TrainingProgramDataBase
+    /*
+        companion object {
+            fun createDB(context: Context) : TrainingProgramDataBase {
+                return Room.databaseBuilder(
+                    context,
+                    TrainingProgramDataBase::class.java,
+                    "programs.db"
+                )
+                    .createFromAsset("database/training_programs.db")
+                    .build()
+            }
         }
-    }
+
+     */
 }
