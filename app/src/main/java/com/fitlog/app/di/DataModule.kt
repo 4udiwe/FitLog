@@ -35,10 +35,10 @@ val dataModule = module {
 
 
     factory<TrainingProgramRepository>{
-        TrainingProgramRepositoryImpl(programDao = get())
+        TrainingProgramRepositoryImpl(programDao = get(), dayDao = get(), exerciseDao = get())
     }
     factory<TrainingDayRepository> {
-        TrainingDayRepositoryImpl(dayDao = get())
+        TrainingDayRepositoryImpl(dayDao = get(), exerciseDao = get())
     }
     factory<ExerciseReposiotry> {
         ExerciseRepositoryImpl(exerciseDao =  get())

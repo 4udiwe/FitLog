@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.fitlog.data.models.TrainingDayDB
 import kotlinx.coroutines.flow.Flow
 
@@ -21,6 +20,8 @@ interface DayDao {
     fun all() : Flow<List<TrainingDayDB>>
 
     @Query("select * from training_days where training_program_id == :id")
-    fun daysOfProgram(id: Int?) : Flow<List<TrainingDayDB>>
+    suspend fun daysOfProgram(id: Int?) : List<TrainingDayDB>
+    @Query("select * from training_days where training_program_id == :id")
+    fun daysOfProgramFlow(id: Int?) : Flow<List<TrainingDayDB>>
 
 }

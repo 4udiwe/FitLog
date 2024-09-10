@@ -22,6 +22,7 @@ val appModule = module {
 
     viewModel<TrainingViewModel> {
         TrainingViewModel(
+            getCurrentProgramUseCase = get(),
             getTrainingDaysOfProgramUseCase = get(),
             getExercisesOfDayUseCase = get()
         )

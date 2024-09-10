@@ -36,7 +36,7 @@ class ExerciseRepositoryImpl(
     )
 
     override fun getExercisesByTrainingDay(trainingDay: TrainingDay): Flow<List<Exercise>> =
-        exerciseDao.exercisesOfDay(trainingDay.id).map { list ->
+        exerciseDao.exercisesOfDayFlow(trainingDay.id).map { list ->
             list.map {
                 it.toDomainExerciseModel()
             }

@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,19 +40,31 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
 import com.fitlog.app.viewmodel.TrainingViewModel
+import com.fitlog.domain.models.Exercise
+import com.fitlog.domain.models.TrainingDay
+import com.fitlog.domain.models.TrainingProgram
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.FlowCollector
 
 @Composable
 fun TrainingScreen(
     paddingValues: PaddingValues,
     vm: TrainingViewModel
 ){
-    /*
-    val currentDay = rememberSaveable(stateSaver = TrainingDayDBSaver) {
-        mutableStateOf(com.example.fitlog.data.models.TrainingDayDB(name = ""))
+
+//    val currentDay = rememberSaveable(stateSaver = ) {
+//        mutableStateOf(TrainingDay)
+//    }
+    val currentProgram = vm.currentProgramFlow.collectAsState(
+        initial = TrainingProgram(
+            name = "",
+            desc = ""
+        )
+    )
+    val currentDay = remember {
+        mutableStateOf(TrainingDay(name = ""))
     }
     val currentExerciseIndex = rememberSaveable {
         mutableIntStateOf(0)
@@ -73,7 +86,7 @@ fun TrainingScreen(
                     "Let's start training!",
                     Modifier.padding(bottom = 10.dp)
                 )
-                programViewModel.currentProgram?.trainingDayDBS?.forEach{
+                vm.getDays(currentProgram.value).collectAsState(initial = emptyList()).value.forEach {
                     TextButton(onClick = {
                         currentDay.value = it
                         isTraining.value = true
@@ -85,31 +98,25 @@ fun TrainingScreen(
         }
     }
     else {
-        LazyColumn (
+        Column (
             Modifier.padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            itemsIndexed(programViewModel.getExercises(currentDay.value)){
-                 index, exercise ->
+            vm.getExercises(currentDay.value).collectAsState(initial = emptyList()).value.forEachIndexed {
+                index, exercise ->
                 ExerciseCard(exercise = exercise, isActive = index == currentExerciseIndex.intValue, currentExerciseIndex)
             }
-            item{
-                TextButton(onClick = { isTraining.value = false}) {
-                    Text("End training", fontSize = 20.sp)
-                }
+            TextButton(onClick = { isTraining.value = false}) {
+                Text("End training", fontSize = 20.sp)
             }
         }
     }
-
-     */
 }
-/*
+
 @Preview(showBackground = true, backgroundColor = 5)
 @Composable
 fun ExerciseCard(
-    exercise: com.example.fitlog.data.models.ExerciseDB = com.example.fitlog.data.models.ExerciseDB(
-        name = "Current exercise"
-    ),
+    exercise: Exercise = Exercise(),
     isActive: Boolean = false,
     currentExerciseIndex: MutableIntState = mutableIntStateOf(0)
 ) {
@@ -273,6 +280,5 @@ fun Timer(
     Text(text = (currentTime/1000L).toString())
 
 }
-}
 
- */
+
