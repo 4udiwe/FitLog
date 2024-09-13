@@ -8,12 +8,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,9 +34,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
 import com.fitlog.domain.models.Exercise
@@ -67,18 +75,19 @@ fun ProgramScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(paddingValues)
 
     ){
-
-        Text("Training program")
-        Text(text = currentProgram.value?.name ?: "")
         LazyColumn {
+            item {
+                Column (modifier = Modifier.fillMaxWidth().padding(end = 10.dp), horizontalAlignment = Alignment.End){
+                    Text("Training program:", color = Color.Gray)
+                    Text(text = currentProgram.value?.name ?: "", fontSize = 22.sp)
+                }
+            }
             if (listDays != null) {
                 items(listDays.value)
                 {
-
                     TrainingDayCard(
                         trainingDay = it,
                         vm = vm,
@@ -98,15 +107,17 @@ fun ProgramScreen(
                 AddButton(onClick = {
                     addDayState.value = true
                 })
+                Text(text = "", Modifier.padding(bottom = 40.dp))
             }
         }
     }
-
 }
 
 @Composable
 fun TrainingDayCard(
-    trainingDay: TrainingDay,
+    trainingDay: TrainingDay = TrainingDay(
+        name = "Trainging day name"
+    ),
     vm: ProgramViewModel,
     onClickEdit: (TrainingDay) -> Unit,
     onClickDelete: () -> Unit
@@ -123,30 +134,78 @@ fun TrainingDayCard(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            Text(text = trainingDay.name)
             Row (
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 30.dp, end = 30.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
-                Column(
-                    modifier = Modifier.padding(start = 40.dp,top = 5.dp)
-                ){
-                    vm.getExercises(trainingDay).collectAsState(initial = emptyList()).value.forEachIndexed{
-                        index, exercise ->
-                        Text(text = "${index + 1}: ${exercise.name}")
+                Text(
+                    text = trainingDay.name,
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    fontSize = 20.sp
+                )
+                IconButton(
+                    modifier = Modifier,
+                    onClick = {
+                        onClickDelete.invoke()
                     }
-                }
-                IconButton(onClick = {
-                    onClickDelete.invoke()
-                }) {
+                ) {
                     Icon(painter = painterResource(id = R.drawable.baseline_delete_24), contentDescription = "delete button")
+                }
+
+            }
+            Divider(thickness = 4.dp, modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 30.dp, end = 30.dp)
+                .clip(
+                    RoundedCornerShape(10.dp)
+                ))
+
+            Column(
+                modifier = Modifier.padding(start = 40.dp,top = 5.dp, end = 30.dp, bottom = 20.dp)
+            ){
+                vm.getExercises(trainingDay).collectAsState(initial = emptyList()).value.forEachIndexed{
+                    index, exercise ->
+                    if (index > 0){
+                        Divider(thickness = 2.dp, modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 40.dp, end = 50.dp)
+                            .clip(
+                                RoundedCornerShape(10.dp)
+                            ))
+                    }
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp, bottom = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(
+                            modifier = Modifier.padding(end = 30.dp),
+                            text = (index + 1).toString(),
+                            color = Color.Gray
+                        )
+                        Text(
+                            text = exercise.name,
+                            fontSize = 18.sp,
+                            modifier = Modifier
+                                .fillMaxWidth(0.8f)
+                                .padding(end = 40.dp),
+                        )
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 20.dp),
+                            text = "${exercise.sets} x ${exercise.reps}",
+                            color = Color.Gray,
+                        )
+                    }
                 }
             }
         }
     }
 }
-
-
 @Composable
 fun AddDayDialog(
     vm: ProgramViewModel,
@@ -227,7 +286,9 @@ fun EditDayDialog(
             .padding(10.dp),
         onDismissRequest = { state.value = false },
         confirmButton = {
-            TextButton(onClick = { state.value = false}) {
+            TextButton(onClick = {
+                state.value = false
+            }) {
                 Text(text = "Done")
             }
         },
