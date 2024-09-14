@@ -106,7 +106,9 @@ fun TrainingScreen(
                 index, exercise ->
                 ExerciseCard(exercise = exercise, isActive = index == currentExerciseIndex.intValue, currentExerciseIndex)
             }
-            TextButton(onClick = { isTraining.value = false}) {
+            TextButton(onClick = {
+                isTraining.value = false
+            }) {
                 Text("End training", fontSize = 20.sp)
             }
         }

@@ -3,15 +3,15 @@ package com.fitlog.data.db
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.fitlog.data.models.ExerciseDB
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExerciseDao {
-    @Insert suspend fun addExercise(exerciseDB: ExerciseDB)
-    @Update suspend fun updateExercise(exerciseDB: ExerciseDB)
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addExercise(exerciseDB: ExerciseDB)
     @Delete suspend fun deleteExercise(exerciseDB: ExerciseDB)
 
     @Query ("select * from exercises")

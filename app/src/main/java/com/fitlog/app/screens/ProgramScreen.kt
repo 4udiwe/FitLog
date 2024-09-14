@@ -3,6 +3,13 @@
 package com.fitlog.app.screens
 
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.animateOffsetAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,13 +18,20 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,16 +43,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitlog.app.viewmodel.ProgramViewModel
@@ -80,7 +98,9 @@ fun ProgramScreen(
     ){
         LazyColumn {
             item {
-                Column (modifier = Modifier.fillMaxWidth().padding(end = 10.dp), horizontalAlignment = Alignment.End){
+                Column (modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 10.dp), horizontalAlignment = Alignment.End){
                     Text("Training program:", color = Color.Gray)
                     Text(text = currentProgram.value?.name ?: "", fontSize = 22.sp)
                 }
@@ -122,13 +142,13 @@ fun TrainingDayCard(
     onClickEdit: (TrainingDay) -> Unit,
     onClickDelete: () -> Unit
 ){
+    var expandedMenu by remember {
+        mutableStateOf(false)
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
-            .clickable {
-                onClickEdit.invoke(trainingDay)
-            }
     ) {
         Column (
             modifier = Modifier.fillMaxWidth(),
@@ -138,22 +158,51 @@ fun TrainingDayCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 30.dp, end = 30.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.CenterVertically
+                //horizontalArrangement = Arrangement.SpaceBetween
             ){
                 Text(
                     text = trainingDay.name,
-                    modifier = Modifier.align(Alignment.CenterVertically),
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .padding(end = 20.dp),
                     fontSize = 20.sp
                 )
                 IconButton(
-                    modifier = Modifier,
                     onClick = {
-                        onClickDelete.invoke()
+                        expandedMenu = true
                     }
                 ) {
-                    Icon(painter = painterResource(id = R.drawable.baseline_delete_24), contentDescription = "delete button")
+                    Icon(Icons.Default.MoreVert, contentDescription = "dropdown menu")
                 }
-
+                DropdownMenu(
+                    expanded = expandedMenu,
+                    onDismissRequest = { expandedMenu = false },
+                    offset = DpOffset(x = 220.dp, y = 0.dp)
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Row (
+                                verticalAlignment = Alignment.CenterVertically
+                            ){
+                                Icon(Icons.Default.Edit, contentDescription = "edit", Modifier.padding(horizontal = 10.dp))
+                                Text(text = "Edit")
+                            }
+                        },
+                        onClick = { onClickEdit.invoke(trainingDay) }
+                    )
+                    DropdownMenuItem(
+                        text = {
+                            Row (
+                                verticalAlignment = Alignment.CenterVertically
+                            ){
+                                Icon(Icons.Default.Delete, contentDescription = "delete", Modifier.padding(horizontal = 10.dp))
+                                Text(text = "Delete")
+                            }
+                        },
+                        onClick = { onClickDelete.invoke() }
+                    )
+                }
             }
             Divider(thickness = 4.dp, modifier = Modifier
                 .fillMaxWidth()
@@ -215,7 +264,9 @@ fun AddDayDialog(
     val dayName = remember {
         mutableStateOf("")
     }
-
+    var errorNote by remember {
+        mutableStateOf(false)
+    }
     AlertDialog(
         modifier = Modifier
             .fillMaxWidth()
@@ -223,8 +274,12 @@ fun AddDayDialog(
         onDismissRequest = { state.value = false },
         confirmButton = {
             TextButton(onClick = {
-                vm.addDay(newDay = TrainingDay(name = dayName.value), program = program)
-                state.value = false
+                if (dayName.value != "") {
+                    vm.addDay(newDay = TrainingDay(name = dayName.value), program = program)
+                    state.value = false
+                } else {
+                    errorNote = true
+                }
             }) {
                 Text(text = "Add new day")
             }
@@ -241,16 +296,33 @@ fun AddDayDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ){
                 TextField(
                     value = dayName.value,
                     onValueChange = { dayName.value = it },
-                    placeholder = { Text("Training day name") })
+                    placeholder = {
+                        Text("Training day name")
+                    }
+                )
+                val errorOffset by animateIntAsState(
+                    targetValue = if (errorNote) 0 else 300,
+                    animationSpec = spring(Spring.DampingRatioHighBouncy),
+                    label = "Error animation"
+                )
+                Text(
+                    text = "Enter training day name!",
+                    Modifier
+                        .padding(10.dp)
+                        .offset(x = errorOffset.dp, y = 0.dp),
+                    color = Color.Red,
+                )
             }
-        },
+        }
     )
 }
+
 
 @Composable
 fun EditDayDialog(
@@ -275,16 +347,13 @@ fun EditDayDialog(
         DeleteExerDialog(vm = vm, state = deleteExerState)
     }
     if (editExerState.value)
-        EditExerDialog(
-            vm = vm,
-            day = trainingDay,
-            state = editExerState
-        )
+        EditExerDialog(vm = vm, day = trainingDay, state = editExerState)
     AlertDialog(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp),
-        onDismissRequest = { state.value = false },
+            .fillMaxWidth(),
+        onDismissRequest = {
+            state.value = false
+        },
         confirmButton = {
             TextButton(onClick = {
                 state.value = false
@@ -292,56 +361,67 @@ fun EditDayDialog(
                 Text(text = "Done")
             }
         },
-        title = {Text("Edit exercises of day: ${trainingDay.name}")},
-        text = {
-            Column(
-                Modifier
+        title = {
+            Column {
+                Text("Edit exercises of day: ${trainingDay.name}")
+                Divider(thickness = 4.dp, modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(top = 6.dp)
+                    .clip(
+                        RoundedCornerShape(10.dp)
+                    ))
+            }
+        },
+        text = {
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Column (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 6.dp),
-                ){
-                    vm.getExercises(trainingDay).collectAsState(initial = emptyList()).value.forEach{
-                            exercise ->
-                        Row (
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp)
-                                .clickable {
-                                    vm.selectedExercise = exercise
-                                    editExerState.value = true
-                                },
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ){
-                            Column {
-                                Text(text = exercise.name)
-                                Row(
-                                    Modifier
-                                        .fillMaxWidth(0.8f),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ){
-                                    Text("${exercise.reps} X ${exercise.sets}", color = Color.Gray)
-                                    Text("rest time: ${exercise.restTime}", color = Color.Gray)
-                                }
-                            }
-                            IconButton(onClick = {
+                vm.getExercises(trainingDay).collectAsState(initial = emptyList()).value.forEach{
+                        exercise ->
+                    Row (
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp)
+                            .clickable {
                                 vm.selectedExercise = exercise
-                                deleteExerState.value = true
-                            }) {
-                                Icon(painter = painterResource(id = R.drawable.baseline_delete_24), contentDescription = "delete button")
+                                editExerState.value = true
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Column (
+                            Modifier.fillMaxWidth(0.9f)
+                        ){
+                            Text(text = exercise.name, fontSize = 18.sp)
+                            Row(
+                                Modifier
+                                    .fillMaxWidth(0.8f),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ){
+                                Text("${exercise.reps} X ${exercise.sets}", color = Color.Gray, modifier = Modifier.fillMaxWidth(0.5f))
+                                Text("rest: ${exercise.restTime}", color = Color.Gray)
+                                Text(text = "s.")
                             }
                         }
+                        IconButton(onClick = {
+                            vm.selectedExercise = exercise
+                            deleteExerState.value = true
+                        }) {
+                            Icon(painter = painterResource(id = R.drawable.baseline_delete_24), contentDescription = "delete button")
+                        }
                     }
-                    AddButton (onClick = {
-
-                        addExerState.value = true
-                    })
+                    Divider(thickness = 2.dp, modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(
+                            RoundedCornerShape(10.dp)
+                        )
+                    )
                 }
+                AddButton (onClick = {
+                    addExerState.value = true
+                })
             }
         }
     )
@@ -367,7 +447,7 @@ fun DeleteDayDialog(
             }
         },
         title = {
-            Text(text = "Delete ${vm.selectedDay!!.name}?")
+            Text(text = "Delete day:\n${vm.selectedDay!!.name}?")
         }
     )
 }
@@ -393,7 +473,7 @@ fun DeleteExerDialog(
             }
         },
         title = {
-                Text(text = "Delete ${vm.selectedExercise!!.name}?")
+            Text(text = "Delete exercise:\n${vm.selectedExercise!!.name}?")
         }
     )
 }
@@ -408,6 +488,8 @@ fun AddExerDialog(
     val sets = remember { mutableIntStateOf(4) }
     val rest = remember { mutableIntStateOf(200) }
 
+    var errorNote by remember { mutableStateOf(false) }
+
     val switchState = remember { mutableStateOf(false) }
 
     AlertDialog(
@@ -420,16 +502,21 @@ fun AddExerDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    vm.addExercise(
-                        Exercise(
-                            name = name.value,
-                            reps = reps.intValue,
-                            sets = sets.intValue,
-                            restTime = rest.intValue
-                        ), vm.selectedDay!!
-                    )
-                    state.value = false
-                }) {
+                    if (name.value != "" && reps.intValue > 0 && sets.intValue > 0 && rest.intValue > 0) {
+                        vm.addExercise(
+                            Exercise(
+                                name = name.value,
+                                reps = reps.intValue,
+                                sets = sets.intValue,
+                                restTime = rest.intValue
+                            ), vm.selectedDay!!
+                        )
+                        state.value = false
+                    } else {
+                        errorNote = true
+                    }
+                }
+            ) {
                 Text("Add exercise")
             }
         },
@@ -438,10 +525,11 @@ fun AddExerDialog(
                 Text(text = "Cancel")
             }
         },
-        title = {Text("Edit day: ${vm.selectedDay!!.name}")},
+        title = {Text("Add new exercise")},
         text = {
             Column (
-                Modifier.fillMaxWidth()
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ){
                 TextField(
                     value = name.value,
@@ -487,6 +575,18 @@ fun AddExerDialog(
                         )
                     }
                 }
+                val errorOffset by animateIntAsState(
+                    targetValue = if (errorNote) 0 else 300,
+                    animationSpec = spring(Spring.DampingRatioHighBouncy),
+                    label = "Error animation"
+                )
+                Text(
+                    text = "Enter exercise name!",
+                    Modifier
+                        .padding(10.dp)
+                        .offset(x = errorOffset.dp, y = 0.dp),
+                    color = Color.Red,
+                )
             }
         }
     )
@@ -518,12 +618,17 @@ fun EditExerDialog(
             .fillMaxWidth()
             .padding(10.dp),
         onDismissRequest = { state.value = false },
+        dismissButton = {
+            TextButton(onClick = { state.value = false }) {
+                Text("Cancel")
+            }
+        },
         confirmButton = {
             TextButton(onClick = {
                 if (exerName.value == ""
-                    || exerSets.intValue == 0
-                    || exerReps.intValue == 0
-                    || exerTime.intValue == 0)
+                    || exerSets.intValue <= 0
+                    || exerReps.intValue <= 0
+                    || exerTime.intValue <= 0)
                     showError.value = true
                 else {
                     vm.selectedExercise!!.name = exerName.value
@@ -549,7 +654,7 @@ fun EditExerDialog(
                 TextField(
                     value = exerName.value,
                     onValueChange = {
-                        exerName.value
+                        exerName.value = it
                     },
                     placeholder = { Text(text = "Exercise name")}
                 )
@@ -562,7 +667,7 @@ fun EditExerDialog(
                         onValueChange = {
                             exerSets.intValue = if (it == "") 0 else it.toInt()
                         },
-                        placeholder = { Text(text = "Sets")}
+                        label = {Text(text = "Sets")}
                     )
                     TextField(
                         modifier = Modifier
@@ -572,7 +677,7 @@ fun EditExerDialog(
                         onValueChange = {
                             exerReps.intValue = if (it == "") 0 else it.toInt()
                         },
-                        placeholder = {Text(text = "Reps")}
+                        label = {Text(text = "Reps")}
                     )
                 }
                 TextField(
@@ -580,15 +685,20 @@ fun EditExerDialog(
                     onValueChange = {
                         exerTime.intValue = if (it == "") 0 else it.toInt()
                     },
-                    placeholder = { Text(text = "Rest time")}
+                    label = { Text(text = "Rest time")}
                 )
-                if (showError.value){
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = "Fill all gaps!",
-                        color = Color.Red
-                    )
-                }
+                val errorOffset by animateIntAsState(
+                    targetValue = if (showError.value) 0 else 300,
+                    animationSpec = spring(Spring.DampingRatioHighBouncy),
+                    label = "Error animation"
+                )
+                Text(
+                    text = "Fill all gaps!",
+                    Modifier
+                        .padding(10.dp)
+                        .offset(x = errorOffset.dp, y = 0.dp),
+                    color = Color.Red,
+                )
             }
         }
     )

@@ -235,7 +235,9 @@ fun AddProgramDialog(
                     placeholder = { Text("Program name") })
                 TextField(
                     value = programDesc.value,
-                    onValueChange = { programDesc.value = it },
+                    onValueChange = {
+                        programDesc.value = it
+                    },
                     placeholder = { Text("Program description") })
             }
         },

@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 
 class ProgramViewModel(
-    private val getCurrentProgramUseCase: GetCurrentProgramUseCase,
+    getCurrentProgramUseCase: GetCurrentProgramUseCase,
     private val getTrainingDaysOfProgramUseCase: GetTrainingDaysOfProgramUseCase,
     private val addTrainingDayToProgramUseCase: AddTrainingDayToProgramUseCase,
     private val deleteTrainingDayUseCase: DeleteTrainingDayUseCase,
