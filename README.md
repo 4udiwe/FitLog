@@ -13,3 +13,4 @@ FitLog - мобильное andriod приложение, которое поз�
 Используются паттерны репозиторий и MVVM.
 # Стек проекта
 Kotlin, Jetpack Compose, Room, Koin, Coroutines, Compose Navigation.
+![diagram](pictures/diagram.png)
