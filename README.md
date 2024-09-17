@@ -20,3 +20,13 @@ FitLog - мобильное andriod приложение, которое поз�
 # Стек проекта
 Kotlin, Jetpack Compose, Room, Koin, Coroutines, Compose Navigation.
 
+# Скриншоты приложения
+<details>
+  <summary>Скриншоты</summary>
+
+  ![screenshot1](pictures/1)
+  ![screenshot2](pictures/2)
+  ![screenshot3](pictures/3)
+  ![screenshot4](pictures/4)
+  ![screenshot5](pictures/5)
+</details>
