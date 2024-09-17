@@ -24,9 +24,9 @@ Kotlin, Jetpack Compose, Room, Koin, Coroutines, Compose Navigation.
 <details>
   <summary>Скриншоты</summary>
 
-  ![screenshot1](pictures/1)
-  ![screenshot2](pictures/2)
-  ![screenshot3](pictures/3)
-  ![screenshot4](pictures/4)
-  ![screenshot5](pictures/5)
+  ![screenshot1](pictures/1.jpg)
+  ![screenshot2](pictures/2.jpg)
+  ![screenshot3](pictures/3.jpg)
+  ![screenshot4](pictures/4.jpg)
+  ![screenshot5](pictures/5.jpg)
 </details>
