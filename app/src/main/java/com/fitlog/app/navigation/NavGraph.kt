@@ -2,7 +2,6 @@ package com.fitlog.app.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,7 +19,6 @@ fun NavGraph(
     trainingViewModel: TrainingViewModel,
     programViewModel: ProgramViewModel,
     settingViewModel: SettingViewModel,
-    owner: LifecycleOwner
 ) {
     NavHost(
         navController = navHostController,

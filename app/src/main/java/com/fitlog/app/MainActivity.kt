@@ -24,8 +24,7 @@ class MainActivity : ComponentActivity() {
             MainScreen(
                 trainingViewModel = trainingVM,
                 programViewModel = programVM,
-                settingViewModel = settingVM,
-                this
+                settingViewModel = settingVM
             )
         }
     }

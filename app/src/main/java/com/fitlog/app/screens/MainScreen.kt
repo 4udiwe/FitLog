@@ -14,8 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
@@ -31,8 +29,7 @@ import com.fitlog.app.viewmodel.TrainingViewModel
 fun MainScreen(
     trainingViewModel: TrainingViewModel,
     programViewModel: ProgramViewModel,
-    settingViewModel: SettingViewModel,
-    owner: LifecycleOwner
+    settingViewModel: SettingViewModel
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -50,7 +47,6 @@ fun MainScreen(
             trainingViewModel = trainingViewModel,
             programViewModel = programViewModel,
             settingViewModel = settingViewModel,
-            owner = owner
         )
     }
 }

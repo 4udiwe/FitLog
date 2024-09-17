@@ -3,6 +3,7 @@ package com.fitlog.app.di
 import com.fitlog.app.viewmodel.ProgramViewModel
 import com.fitlog.app.viewmodel.SettingViewModel
 import com.fitlog.app.viewmodel.TrainingViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

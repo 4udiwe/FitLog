@@ -1,5 +1,6 @@
 package com.fitlog.app.viewmodel
 
+
 import androidx.lifecycle.ViewModel
 import com.fitlog.domain.models.Exercise
 import com.fitlog.domain.models.TrainingDay
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 class TrainingViewModel(
-    private val getCurrentProgramUseCase: GetCurrentProgramUseCase,
+    getCurrentProgramUseCase: GetCurrentProgramUseCase,
     private val getTrainingDaysOfProgramUseCase: GetTrainingDaysOfProgramUseCase,
     private val getExercisesOfDayUseCase: GetExercisesOfDayUseCase
 ): ViewModel(){
@@ -24,8 +25,8 @@ class TrainingViewModel(
         else
             emptyFlow()
     }
-
     fun getExercises(day: TrainingDay): Flow<List<Exercise>> {
         return getExercisesOfDayUseCase.execute(day)
     }
+
 }
