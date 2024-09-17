@@ -219,7 +219,7 @@ fun TrainingDayCard(
                     if (index > 0){
                         Divider(thickness = 2.dp, modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 40.dp, end = 50.dp)
+                            .padding(start = 30.dp, end = 60.dp)
                             .clip(
                                 RoundedCornerShape(10.dp)
                             ))
@@ -231,7 +231,7 @@ fun TrainingDayCard(
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         Text(
-                            modifier = Modifier.padding(end = 30.dp),
+                            modifier = Modifier.padding(end = 20.dp),
                             text = (index + 1).toString(),
                             color = Color.Gray
                         )
@@ -239,7 +239,7 @@ fun TrainingDayCard(
                             text = exercise.name,
                             fontSize = 18.sp,
                             modifier = Modifier
-                                .fillMaxWidth(0.8f)
+                                .fillMaxWidth(0.75f)
                                 .padding(end = 40.dp),
                         )
                         Text(
@@ -248,7 +248,9 @@ fun TrainingDayCard(
                                 .padding(start = 20.dp),
                             text = "${exercise.sets} x ${exercise.reps}",
                             color = Color.Gray,
+                            maxLines = 1
                         )
+
                     }
                 }
             }
