@@ -31,4 +31,4 @@ Kotlin, Jetpack Compose, Room, Koin, Coroutines, Compose Navigation.
   ![screenshot5](pictures/5.jpg)
 </details>
 # Инструкция по установке
-Для установки необходимо скачать файл FilLog.apk, лежащий в корневой директории проекта, и установить приложение на устройство с Android OS.
+Для установки необходимо скачать файл FitLog.apk, лежащий в корневой директории проекта, и установить приложение на устройство с Android OS.
