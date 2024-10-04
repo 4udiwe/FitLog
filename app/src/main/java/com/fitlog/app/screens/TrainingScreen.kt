@@ -1,6 +1,7 @@
 package com.fitlog.app.screens
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -84,15 +85,37 @@ fun TrainingScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 Text(
-                    "Let's start training!",
+                    "Select training day",
                     Modifier.padding(bottom = 10.dp)
                 )
-                vm.getDays(currentProgram.value).collectAsState(initial = emptyList()).value.forEach {
-                    TextButton(onClick = {
-                        currentDay.value = it
-                        isTraining.value = true
-                    }) {
-                        Text(text = it.name, fontSize = 20.sp)
+                vm.getDays(currentProgram.value).collectAsState(initial = emptyList()).value.forEachIndexed {
+                    index, day ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp)
+                            .clickable {
+                                currentDay.value = day
+                                isTraining.value = true
+                            }
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 30.dp)
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                        ) {
+                            Text(text = (index + 1).toString(), color = Color.Gray)
+                            Divider(
+                                thickness = 4.dp, modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp)
+                                    .clip(
+                                        RoundedCornerShape(10.dp)
+                                    )
+                            )
+                            Text(text = day.name, fontSize = 30.sp)
+                        }
                     }
                 }
             }
