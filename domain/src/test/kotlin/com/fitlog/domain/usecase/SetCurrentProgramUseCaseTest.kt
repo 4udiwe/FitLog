@@ -18,7 +18,6 @@ class SetCurrentProgramUseCaseTest {
     fun tearDown() {
         Mockito.reset(programRepository)
     }
-
     @Test
     fun `prev current program was null`() {
         val useCase = SetCurrentProgramUseCase(programRepository)

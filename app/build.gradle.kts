@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    //id
+    //di
     implementation(libs.koin.android)
     //modules
     implementation(project(":data"))
