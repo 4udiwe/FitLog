@@ -1,5 +1,6 @@
 package com.fitlog.app.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleOwner
 import com.example.fitlog.R
 import com.fitlog.app.viewmodel.TrainingViewModel
 import com.fitlog.domain.models.Exercise
@@ -60,7 +62,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun TrainingScreen(
     paddingValues: PaddingValues,
-    vm: TrainingViewModel
+    vm: TrainingViewModel,
+    liveCycleOwner: LifecycleOwner
 ){
     val currentProgram = vm.currentProgramFlow.collectAsState(
         initial = TrainingProgram(
@@ -68,16 +71,15 @@ fun TrainingScreen(
             desc = ""
         )
     )
-    val isTraining = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val isTraining = remember { mutableStateOf(false) }
+    vm.isTrainingLive.observe(liveCycleOwner){ isTraining.value = it}
 
-    val currentDay = remember {
-        mutableStateOf(TrainingDay(name = ""))
-    }
-    val currentExerciseIndex = rememberSaveable {
-        mutableIntStateOf(0)
-    }
+    val currentDay = remember { mutableStateOf(TrainingDay(name = "")) }
+    vm.currentTrainingDayLive.observe(liveCycleOwner){ currentDay.value = it}
+
+    val currentExerciseIndex = rememberSaveable { mutableIntStateOf(0) }
+    vm.currentExerciseIndexLive.observe(liveCycleOwner){ currentExerciseIndex.intValue = it}
+
     if (!isTraining.value){
         Box(
             modifier = Modifier
@@ -101,8 +103,10 @@ fun TrainingScreen(
                             .fillMaxWidth()
                             .padding(4.dp)
                             .clickable {
-                                currentDay.value = day
-                                isTraining.value = true
+                                vm.currentTrainingDayLive.value = day
+                                vm.isTrainingLive.value = true
+//                                currentDay.value = day
+//                                isTraining.value = true
                             }
                     ) {
                         Column(
@@ -135,12 +139,13 @@ fun TrainingScreen(
                 .verticalScroll(enabled = true, state = rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ){
-            vm.getExercises(currentDay.value).collectAsState(initial = emptyList()).value.forEachIndexed{
+            vm.getExercises().collectAsState(initial = emptyList()).value.forEachIndexed{
                     index, exercise ->
-                ExerciseCard(exercise = exercise, isActive = index == currentExerciseIndex.intValue, currentExerciseIndex)
+                ExerciseCard(exercise = exercise, isActive = index == currentExerciseIndex.intValue, vm = vm, liveCycleOwner = liveCycleOwner)
             }
             TextButton(onClick = {
-                isTraining.value = false
+                vm.isTrainingLive.value = false
+                vm.currentExerciseIndexLive.value = 0
             }) {
                 Text(stringResource(R.string.end_training), fontSize = 20.sp)
             }
@@ -148,24 +153,25 @@ fun TrainingScreen(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 5)
+
 @Composable
 fun ExerciseCard(
     exercise: Exercise = Exercise(name = "Exercise exercise name"),
+    vm: TrainingViewModel,
     isActive: Boolean = false,
-    currentExerciseIndex: MutableIntState = mutableIntStateOf(0)
+    liveCycleOwner: LifecycleOwner
 ) {
 
     val setsLast = remember {
-        mutableIntStateOf(exercise.sets)
+        mutableIntStateOf(10)
     }
 
     val timer = remember {
         mutableStateOf(false)
     }
     if (setsLast.intValue == 0 && !timer.value){
-        currentExerciseIndex.intValue += 1
-        setsLast.intValue--
+        vm.currentExerciseIndexLive.value = vm.currentExerciseIndexLive.value?.plus(1)
+        TODO("Waiting for TimerService realization")
     }
     Card (
         modifier = Modifier
@@ -181,9 +187,6 @@ fun ExerciseCard(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ){
-            if (setsLast.intValue == 0 && !timer.value){
-                currentExerciseIndex.intValue += 1
-            }
             Column (
                 Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -246,14 +249,15 @@ fun ExerciseCard(
                                 .padding(top = 10.dp, bottom = 10.dp),
                             onClick = {
                                 timer.value = !timer.value
-                                if (timer.value)
-                                    setsLast.intValue -= 1
+                                if (timer.value) {
+                                    TODO("Waiting for TimerService realization")
+                                }
                             }) {
                             if (timer.value) {
                                 Timer(
                                     totalTime =
                                     if (setsLast.intValue == 0)
-                                        60000L
+                                        4000L
                                     else
                                         exercise.restTime.toLong() * 1000,
                                     isOn = timer,

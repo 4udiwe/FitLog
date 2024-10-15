@@ -2,6 +2,7 @@ package com.fitlog.app.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,13 +20,14 @@ fun NavGraph(
     trainingViewModel: TrainingViewModel,
     programViewModel: ProgramViewModel,
     settingViewModel: SettingViewModel,
+    liveCycleOwner: LifecycleOwner
 ) {
     NavHost(
         navController = navHostController,
         startDestination = "screen_1",
     ){
         composable("screen_1"){
-            TrainingScreen(paddingValues = paddingValues, vm = trainingViewModel)
+            TrainingScreen(paddingValues = paddingValues, vm = trainingViewModel, liveCycleOwner = liveCycleOwner)
         }
         composable("screen_2"){
             ProgramScreen(paddingValues = paddingValues, vm = programViewModel)

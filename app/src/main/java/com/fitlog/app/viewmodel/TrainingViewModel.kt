@@ -1,6 +1,8 @@
 package com.fitlog.app.viewmodel
 
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fitlog.domain.models.Exercise
 import com.fitlog.domain.models.TrainingDay
@@ -17,6 +19,11 @@ class TrainingViewModel(
     private val getExercisesOfDayUseCase: GetExercisesOfDayUseCase
 ): ViewModel(){
 
+    val isTrainingLive = MutableLiveData(false)
+    val currentTrainingDayLive = MutableLiveData(TrainingDay(name = ""))
+    val currentExerciseIndexLive = MutableLiveData(0)
+
+
     val currentProgramFlow = getCurrentProgramUseCase.execute()
 
     fun getDays(program: TrainingProgram?): Flow<List<TrainingDay>> {
@@ -25,8 +32,8 @@ class TrainingViewModel(
         else
             emptyFlow()
     }
-    fun getExercises(day: TrainingDay): Flow<List<Exercise>> {
-        return getExercisesOfDayUseCase.execute(day)
+    fun getExercises(): Flow<List<Exercise>> {
+        return getExercisesOfDayUseCase.execute(currentTrainingDayLive.value!!)
     }
 
 }
