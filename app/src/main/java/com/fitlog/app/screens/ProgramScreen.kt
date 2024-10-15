@@ -54,6 +54,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
@@ -101,7 +102,7 @@ fun ProgramScreen(
                 Column (modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = 10.dp), horizontalAlignment = Alignment.End){
-                    Text("Training program:", color = Color.Gray)
+                    Text(stringResource(R.string.training_program), color = Color.Gray)
                     Text(text = currentProgram.value?.name ?: "", fontSize = 22.sp)
                 }
             }
@@ -136,7 +137,7 @@ fun ProgramScreen(
 @Composable
 fun TrainingDayCard(
     trainingDay: TrainingDay = TrainingDay(
-        name = "Trainging day name"
+        name = stringResource(R.string.training_day_name)
     ),
     vm: ProgramViewModel,
     onClickEdit: (TrainingDay) -> Unit,
@@ -186,7 +187,7 @@ fun TrainingDayCard(
                                 verticalAlignment = Alignment.CenterVertically
                             ){
                                 Icon(Icons.Default.Edit, contentDescription = "edit", Modifier.padding(horizontal = 10.dp))
-                                Text(text = "Edit")
+                                Text(text = stringResource(R.string.edit))
                             }
                         },
                         onClick = { onClickEdit.invoke(trainingDay) }
@@ -197,7 +198,7 @@ fun TrainingDayCard(
                                 verticalAlignment = Alignment.CenterVertically
                             ){
                                 Icon(Icons.Default.Delete, contentDescription = "delete", Modifier.padding(horizontal = 10.dp))
-                                Text(text = "Delete")
+                                Text(text = stringResource(R.string.delete))
                             }
                         },
                         onClick = { onClickDelete.invoke() }
@@ -283,16 +284,16 @@ fun AddDayDialog(
                     errorNote = true
                 }
             }) {
-                Text(text = "Add new day")
+                Text(text = stringResource(R.string.add_new_day))
             }
         },
         dismissButton = {
              TextButton(onClick = { state.value = false }) {
-                 Text(text = "Cancel")
+                 Text(text = stringResource(R.string.cancel))
              }
         },
         title = {
-            Text(text = "Add new training day")
+            Text(text = stringResource(R.string.add_new_training_day))
         },
         text = {
             Column(
@@ -305,7 +306,7 @@ fun AddDayDialog(
                     value = dayName.value,
                     onValueChange = { dayName.value = it },
                     placeholder = {
-                        Text("Training day name")
+                        Text(stringResource(R.string.training_day_name))
                     }
                 )
                 val errorOffset by animateIntAsState(
@@ -314,7 +315,7 @@ fun AddDayDialog(
                     label = "Error animation"
                 )
                 Text(
-                    text = "Enter training day name!",
+                    text = stringResource(R.string.error_enter_training_day_name),
                     Modifier
                         .padding(10.dp)
                         .offset(x = errorOffset.dp, y = 0.dp),
@@ -360,12 +361,12 @@ fun EditDayDialog(
             TextButton(onClick = {
                 state.value = false
             }) {
-                Text(text = "Done")
+                Text(text = stringResource(R.string.done))
             }
         },
         title = {
             Column {
-                Text("Edit exercises of day: ${trainingDay.name}")
+                Text(stringResource(R.string.edit_exercises_of_day, trainingDay.name))
                 Divider(thickness = 4.dp, modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 6.dp)
@@ -403,8 +404,8 @@ fun EditDayDialog(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ){
                                 Text("${exercise.reps} X ${exercise.sets}", color = Color.Gray, modifier = Modifier.fillMaxWidth(0.5f))
-                                Text("rest: ${exercise.restTime}", color = Color.Gray)
-                                Text(text = "s.")
+                                Text(stringResource(R.string.rest, exercise.restTime), color = Color.Gray)
+                                Text(text = stringResource(R.string.s), color = Color.Gray)
                             }
                         }
                         IconButton(onClick = {
@@ -440,16 +441,16 @@ fun DeleteDayDialog(
                 vm.deleteDay(vm.selectedDay!!)
                 state.value = false
             }) {
-                Text("Delete")
+                Text(stringResource(id = R.string.delete))
             }
         },
         dismissButton = {
             TextButton(onClick = {state.value = false}) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel))
             }
         },
         title = {
-            Text(text = "Delete day:\n${vm.selectedDay!!.name}?")
+            Text(text = stringResource(R.string.delete_day_dialog_header, vm.selectedDay!!.name))
         }
     )
 }
@@ -466,16 +467,19 @@ fun DeleteExerDialog(
                 vm.deleteExercise(vm.selectedExercise!!)
                 state.value = false
             }) {
-                Text("Delete")
+                Text(stringResource(id = R.string.delete))
             }
         },
         dismissButton = {
             TextButton(onClick = {state.value = false}) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel))
             }
         },
         title = {
-            Text(text = "Delete exercise:\n${vm.selectedExercise!!.name}?")
+            Text(text = stringResource(
+                R.string.delete_exercise_dialog_header,
+                vm.selectedExercise!!.name
+            ))
         }
     )
 }
@@ -519,15 +523,15 @@ fun AddExerDialog(
                     }
                 }
             ) {
-                Text("Add exercise")
+                Text(stringResource(R.string.add_exercise))
             }
         },
         dismissButton = {
             TextButton(onClick = { state.value = false}) {
-                Text(text = "Cancel")
+                Text(text = stringResource(id = R.string.cancel))
             }
         },
-        title = {Text("Add new exercise")},
+        title = {Text(stringResource(R.string.add_new_exercise))},
         text = {
             Column (
                 Modifier.fillMaxWidth(),
@@ -538,16 +542,16 @@ fun AddExerDialog(
                     onValueChange = {
                         name.value = it
                     },
-                    placeholder = { Text(text = "Exercise name")}
+                    placeholder = { Text(text = stringResource(R.string.exercise_name))}
                 )
                 Row (
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(4.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    Text("Use custom params")
+                    Text(stringResource(R.string.use_custom_params), modifier = Modifier.fillMaxWidth(0.7f).padding(end = 16.dp))
                     Switch(checked = switchState.value, onCheckedChange = {switchState.value = it})
                 }
                 if (switchState.value){
@@ -557,7 +561,7 @@ fun AddExerDialog(
                                 modifier = Modifier
                                     .fillMaxWidth(0.5f)
                                     .padding(end = 2.dp, bottom = 4.dp),
-                                label = { Text(text = "Reps") },
+                                label = { Text(text = stringResource(R.string.reps)) },
                                 value = reps.intValue.toString(),
                                 onValueChange = { reps.intValue = if (it == "") 0 else it.toInt()}
                             )
@@ -565,13 +569,13 @@ fun AddExerDialog(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(start = 2.dp, bottom = 4.dp),
-                                label = { Text(text = "Sets") },
+                                label = { Text(text = stringResource(R.string.sets)) },
                                 value = sets.intValue.toString(),
                                 onValueChange = { sets.intValue = if (it == "") 0 else it.toInt()}
                             )
                         }
                         TextField(
-                            label = { Text(text = "Rest time (s)") },
+                            label = { Text(text = stringResource(R.string.rest_time_s)) },
                             value = rest.intValue.toString(),
                             onValueChange = { rest.intValue = if (it == "") 0 else it.toInt()}
                         )
@@ -583,7 +587,7 @@ fun AddExerDialog(
                     label = "Error animation"
                 )
                 Text(
-                    text = "Enter exercise name!",
+                    text = stringResource(R.string.error_enter_exercise_name),
                     Modifier
                         .padding(10.dp)
                         .offset(x = errorOffset.dp, y = 0.dp),
@@ -622,7 +626,7 @@ fun EditExerDialog(
         onDismissRequest = { state.value = false },
         dismissButton = {
             TextButton(onClick = { state.value = false }) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel))
             }
         },
         confirmButton = {
@@ -642,10 +646,10 @@ fun EditExerDialog(
                     state.value = false
                 }
             }) {
-                Text(text = "Done")
+                Text(text = stringResource(id = R.string.done))
             }
         },
-        title = {Text("Edit exercise")},
+        title = {Text(stringResource(R.string.edit_exercise))},
         text = {
             Column(
                 Modifier
@@ -658,7 +662,7 @@ fun EditExerDialog(
                     onValueChange = {
                         exerName.value = it
                     },
-                    placeholder = { Text(text = "Exercise name")}
+                    placeholder = { Text(text = stringResource(id = R.string.exercise_name))}
                 )
                 Row {
                     TextField(
@@ -669,7 +673,7 @@ fun EditExerDialog(
                         onValueChange = {
                             exerSets.intValue = if (it == "") 0 else it.toInt()
                         },
-                        label = {Text(text = "Sets")}
+                        label = {Text(text = stringResource(id = R.string.sets))}
                     )
                     TextField(
                         modifier = Modifier
@@ -679,7 +683,7 @@ fun EditExerDialog(
                         onValueChange = {
                             exerReps.intValue = if (it == "") 0 else it.toInt()
                         },
-                        label = {Text(text = "Reps")}
+                        label = {Text(text = stringResource(id = R.string.reps))}
                     )
                 }
                 TextField(
@@ -687,7 +691,7 @@ fun EditExerDialog(
                     onValueChange = {
                         exerTime.intValue = if (it == "") 0 else it.toInt()
                     },
-                    label = { Text(text = "Rest time")}
+                    label = { Text(text = stringResource(id = R.string.rest_time_s))}
                 )
                 val errorOffset by animateIntAsState(
                     targetValue = if (showError.value) 0 else 300,
@@ -695,7 +699,7 @@ fun EditExerDialog(
                     label = "Error animation"
                 )
                 Text(
-                    text = "Fill all gaps!",
+                    text = stringResource(R.string.error_fill_all_gaps),
                     Modifier
                         .padding(10.dp)
                         .offset(x = errorOffset.dp, y = 0.dp),

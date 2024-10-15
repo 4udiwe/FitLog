@@ -1,4 +1,41 @@
 <resources>
-    <string name="app_name">FitLog</string>
-    <string name="program1">{"name":"Program1","restDays":"1 by 1","trainingDays":[{"exercises":[{"name":"ex1","reps":15,"restTime":300,"sets":4},{"name":"ex2","reps":15,"restTime":300,"sets":4},{"name":"ex3","reps":15,"restTime":300,"sets":4},{"name":"ex4","reps":15,"restTime":300,"sets":4},{"name":"ex5","reps":15,"restTime":300,"sets":4}],"name":"day1"},{"exercises":[{"name":"ex1","reps":15,"restTime":300,"sets":4},{"name":"ex2","reps":15,"restTime":300,"sets":4},{"name":"ex3","reps":15,"restTime":300,"sets":4},{"name":"ex4","reps":15,"restTime":300,"sets":4},{"name":"ex5","reps":15,"restTime":300,"sets":4}],"name":"day2"},{"exercises":[{"name":"ex1","reps":15,"restTime":300,"sets":4},{"name":"ex2","reps":15,"restTime":300,"sets":4},{"name":"ex3","reps":15,"restTime":300,"sets":4},{"name":"ex4","reps":15,"restTime":300,"sets":4},{"name":"ex5","reps":15,"restTime":300,"sets":4}],"name":"day3"}]}</string>
+    <string name="app_name" translatable="false">FitLog</string>
+    <string name="add">Add</string>
+    <string name="training_program">Training program:</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="add_new_day">Add new day</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_new_training_day">Add new training day</string>
+    <string name="training_day_name">Training day name</string>
+    <string name="error_enter_training_day_name">Enter training day name!</string>
+    <string name="done">Done</string>
+    <string name="edit_exercises_of_day">Edit exercises of day: %1$s</string>
+    <string name="rest">rest: %1$s</string>
+    <string name="s">s.</string>
+    <string name="delete_day_dialog_header">Delete day:\n%1$s?</string>
+    <string name="delete_exercise_dialog_header">Delete exercise: %1$s?</string>
+    <string name="add_exercise">Add exercise</string>
+    <string name="add_new_exercise">Add new exercise</string>
+    <string name="exercise_name">Exercise name</string>
+    <string name="use_custom_params">Use custom params</string>
+    <string name="reps">Reps</string>
+    <string name="sets">Sets</string>
+    <string name="rest_time_s">Rest time (s)</string>
+    <string name="error_enter_exercise_name">Enter exercise name!</string>
+    <string name="edit_exercise">Edit exercise</string>
+    <string name="error_fill_all_gaps">Fill all gaps!</string>
+    <string name="training_program_setting_desc">Chose your training program or add new one</string>
+    <string name="choose_program">Choose program</string>
+    <string name="back">Back</string>
+    <string name="chose_training_program_dialog_header">Chose training program</string>
+    <string name="add_new_program">Add new program</string>
+    <string name="add_new_training_program_dialog_header">Add new training program</string>
+    <string name="program_name">Program name</string>
+    <string name="program_description">Program description</string>
+    <string name="delete_program_dialog_header">Delete %1$s?</string>
+    <string name="select_training_day">Select training day</string>
+    <string name="end_training">End training</string>
+    <string name="sets_last">Sets last:</string>
+    <string name="sets_done">Done!</string>
 </resources>

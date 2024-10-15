@@ -1,6 +1,5 @@
 package com.fitlog.app.screens
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Card
@@ -40,6 +43,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
@@ -82,12 +86,14 @@ fun TrainingScreen(
             contentAlignment = Alignment.Center
         ){
             Column (
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.verticalScroll(enabled = true, state = rememberScrollState())
             ){
                 Text(
-                    "Select training day",
+                    stringResource(R.string.select_training_day),
                     Modifier.padding(bottom = 10.dp)
                 )
+
                 vm.getDays(currentProgram.value).collectAsState(initial = emptyList()).value.forEachIndexed {
                     index, day ->
                     Card(
@@ -122,18 +128,21 @@ fun TrainingScreen(
         }
     }
     else {
+
         Column (
-            Modifier.padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally
+            Modifier
+                .padding(paddingValues)
+                .verticalScroll(enabled = true, state = rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ){
-            vm.getExercises(currentDay.value).collectAsState(initial = emptyList()).value.forEachIndexed {
+            vm.getExercises(currentDay.value).collectAsState(initial = emptyList()).value.forEachIndexed{
                     index, exercise ->
                 ExerciseCard(exercise = exercise, isActive = index == currentExerciseIndex.intValue, currentExerciseIndex)
             }
             TextButton(onClick = {
                 isTraining.value = false
             }) {
-                Text("End training", fontSize = 20.sp)
+                Text(stringResource(R.string.end_training), fontSize = 20.sp)
             }
         }
     }
@@ -167,7 +176,6 @@ fun ExerciseCard(
                 top = 8.dp,
                 bottom = 8.dp
             )
-        //сделать обводку и еще че нить
     ){
         Row (
             modifier = Modifier.fillMaxWidth(),
@@ -175,7 +183,6 @@ fun ExerciseCard(
         ){
             if (setsLast.intValue == 0 && !timer.value){
                 currentExerciseIndex.intValue += 1
-                Log.d("RRR", "currentexer++")
             }
             Column (
                 Modifier.fillMaxWidth(),
@@ -190,7 +197,7 @@ fun ExerciseCard(
                         fontSize = 20.sp,
                         modifier = Modifier
                             .fillMaxWidth(0.7f)
-                            .padding(start = 30.dp, top = 16.dp, bottom = 16.dp)
+                            .padding(start = 30.dp, top = 16.dp, bottom = 16.dp, end = 30.dp)
                     )
                     Text(
                         text = "${exercise.sets} x ${exercise.reps}",
@@ -211,29 +218,26 @@ fun ExerciseCard(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ){
-                        Row (
-                            modifier = Modifier.fillMaxWidth(0.6f),
-                            verticalAlignment = Alignment.CenterVertically
-                        ){
-                            Text(
-                                modifier = Modifier.padding(
+                        Row (modifier = Modifier
+                                .fillMaxWidth(0.6f)
+                                .padding(
                                     start = 30.dp,
                                     top = 16.dp,
-                                    bottom = 16.dp,
-                                    end = 10.dp
-                                ),
-                                text = "Sets last:",
-                                color = Color.Gray,
-                                fontSize = 20.sp
-                            )
-                            Text(
-                                text =
-                                if (setsLast.intValue == 0)
-                                    "Done!"
-                                else
-                                    setsLast.intValue.toString(),
-                                fontSize = 28.sp
-                            )
+                                    bottom = 16.dp
+                                ), verticalAlignment = Alignment.CenterVertically){
+                            if (setsLast.intValue == 0){
+                                Text(text = stringResource(id = R.string.done), fontSize = 28.sp)
+                            } else{
+                                Text(
+                                    modifier = Modifier.padding(
+                                        end = 10.dp
+                                    ),
+                                    text = stringResource(R.string.sets_last),
+                                    color = Color.Gray,
+                                    fontSize = 20.sp
+                                )
+                                Text(text = setsLast.intValue.toString(), fontSize = 28.sp)
+                            }
                         }
                         IconButton(
                             modifier = Modifier

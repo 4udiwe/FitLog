@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add">Добавить</string>
+    <string name="training_program">Тренировочная программа</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="add_new_day">Добавить новый день</string>
+    <string name="cancel">Отмена</string>
+    <string name="add_new_training_day">Добавить новый тренировочный день</string>
+    <string name="training_day_name">Название дня</string>
+    <string name="error_enter_training_day_name">Введите название дня!</string>
+    <string name="done">Готово</string>
+    <string name="edit_exercises_of_day">Редактирование упражнений дня: %1$s</string>
+    <string name="rest">отдых: %1$s</string>
+    <string name="s">с.</string>
+    <string name="delete_exercise_dialog_header">Удалить упражнение: %1$s?</string>
+    <string name="add_exercise">Добавить упражнение</string>
+    <string name="add_new_exercise">Добавить новое упражнение</string>
+    <string name="exercise_name">Название упражнения</string>
+    <string name="use_custom_params">Пользовательские параметры</string>
+    <string name="reps">Повторы</string>
+    <string name="sets">Подходы</string>
+    <string name="rest_time_s">Отдых (с)</string>
+    <string name="error_enter_exercise_name">Введите название упражнения!</string>
+    <string name="edit_exercise">Редактировать упражнение</string>
+    <string name="error_fill_all_gaps">Заполните все поля!</string>
+    <string name="training_program_setting_desc">Выберите текущую программу или добавьте новую</string>
+    <string name="choose_program">Выберите программу</string>
+    <string name="back">Назад</string>
+    <string name="chose_training_program_dialog_header">Выберите тренировочную программу</string>
+    <string name="add_new_program">Добавить программу</string>
+    <string name="add_new_training_program_dialog_header">Добавить новую тренировочную программу</string>
+    <string name="program_name">Название программы</string>
+    <string name="program_description">Описание программы</string>
+    <string name="delete_program_dialog_header">Удалить %1$s?</string>
+    <string name="select_training_day">Выберите тренировочный день</string>
+    <string name="end_training">Закончить тренировку</string>
+    <string name="sets_last">Подходов еще:</string>
+    <string name="sets_done">Сделано!</string>
+    <string name="delete_day_dialog_header">Удалить день: %1$s?</string>
+</resources>

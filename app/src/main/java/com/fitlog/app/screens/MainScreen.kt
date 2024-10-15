@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
 import com.fitlog.app.viewmodel.ProgramViewModel
 import com.example.fitlog.R
@@ -63,7 +64,7 @@ fun AddButton(onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
 
             ){
-            Text("Add")
+            Text(stringResource(R.string.add))
             Icon(painter = painterResource(id = R.drawable.baseline_add_24), contentDescription = "Add")
         }
     }

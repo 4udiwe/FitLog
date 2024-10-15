@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.fitlog.R
 import com.fitlog.app.viewmodel.SettingViewModel
@@ -79,8 +80,8 @@ fun SettingsScreen(
                 Column(
                     modifier = Modifier.fillMaxWidth(0.6f)
                 ) {
-                    Text(text = "Training program")
-                    Text(text = "Chose your training program or add new one", color = Color.Gray)
+                    Text(text = stringResource(id = R.string.training_program))
+                    Text(text = stringResource(R.string.training_program_setting_desc), color = Color.Gray)
                 }
                 TextButton(
                     modifier = Modifier
@@ -90,7 +91,7 @@ fun SettingsScreen(
                         editProgramsState.value = true
                     }
                 ) {
-                    Text(text = if (currentProgram.value == null) "Choose program" else currentProgram.value!!.name)
+                    Text(text = if (currentProgram.value == null) stringResource(R.string.choose_program) else currentProgram.value!!.name)
                 }
             }
         }
@@ -131,10 +132,10 @@ fun EditProgramsDialog(
             },
         confirmButton = {
             TextButton(onClick = { state.value = false}) {
-                Text(text = "Back")
+                Text(text = stringResource(R.string.back))
             }
         },
-        title = {Text("Chose training program")},
+        title = {Text(stringResource(R.string.chose_training_program_dialog_header))},
         text = {
             Column(
                 Modifier
@@ -159,7 +160,10 @@ fun EditProgramsDialog(
                             Column (modifier = Modifier
                                 .fillMaxWidth(0.7f)
                                 .clickable {
-                                    vm.setCurrentProgram(newCurrentProgram = program, currentProgram = currentProgram)
+                                    vm.setCurrentProgram(
+                                        newCurrentProgram = program,
+                                        currentProgram = currentProgram
+                                    )
                                     state.value = false
                                 }
                             ){
@@ -197,7 +201,7 @@ fun AddProgramDialog(
         mutableStateOf("")
     }
     val programDesc = remember {
-        mutableStateOf("Default description")
+        mutableStateOf("")
     }
 
     AlertDialog(
@@ -212,16 +216,16 @@ fun AddProgramDialog(
                 )
                 state.value = false
             }) {
-                Text(text = "Add new program")
+                Text(text = stringResource(R.string.add_new_program))
             }
         },
         dismissButton = {
             TextButton(onClick = { state.value = false }) {
-                Text(text = "Cancel")
+                Text(text = stringResource(id = R.string.cancel))
             }
         },
         title = {
-            Text(text = "Add new training program")
+            Text(text = stringResource(R.string.add_new_training_program_dialog_header))
         },
         text = {
             Column(
@@ -232,13 +236,13 @@ fun AddProgramDialog(
                 TextField(
                     value = programName.value,
                     onValueChange = { programName.value = it },
-                    placeholder = { Text("Program name") })
+                    placeholder = { Text(stringResource(R.string.program_name)) })
                 TextField(
                     value = programDesc.value,
                     onValueChange = {
                         programDesc.value = it
                     },
-                    placeholder = { Text("Program description") })
+                    placeholder = { Text(stringResource(R.string.program_description)) })
             }
         },
     )
@@ -257,16 +261,16 @@ fun DeleteProgramDialog(
                 vm.deleteProgram(program)
                 state.value = false
             }) {
-                Text("Delete")
+                Text(stringResource(id = R.string.delete))
             }
         },
         dismissButton = {
             TextButton(onClick = {state.value = false}) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel))
             }
         },
         title = {
-            Text(text = "Delete ${program.name}?")
+            Text(text = stringResource(R.string.delete_program_dialog_header, program.name))
         }
     )
 }
